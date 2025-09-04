@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:openlibrary_book_explorer/SplashScreen.dart';
+
+
+import 'Configuration/Routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,8 +14,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Book Finder Application',
-      home: SplashScreen(),
+      initialRoute: AppRoutes.onBoarding,
+      routes: AppRoutes.routes,
     );
   }
 }
