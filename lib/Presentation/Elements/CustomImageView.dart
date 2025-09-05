@@ -39,7 +39,7 @@ class CommonImageView extends StatelessWidget {
   Widget _buildImageView() {
     if (svgPath != null && svgPath!.isNotEmpty) {
       return Animate(
-        effects: const [FadeEffect(duration: Duration(milliseconds: 500))],
+        effects: [FadeEffect(duration: Duration(milliseconds: 1000))],
         child: SizedBox(
           height: height,
           width: width,

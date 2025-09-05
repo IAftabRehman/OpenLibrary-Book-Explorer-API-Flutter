@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:openlibrary_book_explorer/Configuration/Colors.dart';
 import 'package:openlibrary_book_explorer/Models/OnBoardingModel.dart';
+import 'package:openlibrary_book_explorer/Presentation/Elements/CustomBottom.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomImageView.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomText.dart';
 
@@ -40,16 +41,40 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       body: PageView.builder(
         itemCount: model.length,
         itemBuilder: (context, index) {
-          return Column(
-            children: [
-              CommonImageView(imagePath: model[index].image),
-              SizedBox(height: 10),
-              MyText(text: model[index].title.toString(), size: 20, color: Colors.white,),
-              SizedBox(height: 10),
-              MyText(text: model[index].subTitle.toString(), size: 18, color: Colors.white,)
-            ],
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 80),
+                CommonImageView(imagePath: model[index].image, scale: 3),
+                SizedBox(height: 40),
+                MyText(
+                  text: model[index].title.toString(),
+                  size: 24,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+                SizedBox(height: 10),
+                MyText(
+                  text: model[index].subTitle.toString(),
+                  size: 19,
+                  color: Colors.white,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           );
         },
+      ),
+      bottomNavigationBar: MyButton(
+        paddingLeft: 100,
+        paddingRight: 100,
+        paddingBottom: 10,
+        paddingTop: 10,
+        btnLabel: "Skip",
+        borderRadius: BorderRadius.circular(20),
+        onPressed: () {}
       ),
     );
   }

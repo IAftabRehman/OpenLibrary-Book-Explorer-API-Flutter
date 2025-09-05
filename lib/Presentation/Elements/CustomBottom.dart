@@ -25,7 +25,7 @@ class MyButton extends StatelessWidget {
 
   const MyButton({
     super.key,
-    this.btnLabel,
+    required this.btnLabel,
     required this.onPressed,
     this.color,
     this.paddingTop,
@@ -66,7 +66,7 @@ class MyButton extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: borderRadius ?? BorderRadius.circular(10),
             border: border,
-            color: color ?? Colors.black,
+            color: color ?? Colors.white,
           ),
           child: Center(
 
@@ -79,7 +79,7 @@ class MyButton extends StatelessWidget {
                     fontSize: fontSize ?? 18,
                     fontWeight: fontWeight ?? FontWeight.w600,
                     letterSpacing: letterSpacing ?? 0,
-                    color: textColor ?? Colors.black,
+                    color: textColor ?? Colors.blue,
                   ),
             ),
           ),
