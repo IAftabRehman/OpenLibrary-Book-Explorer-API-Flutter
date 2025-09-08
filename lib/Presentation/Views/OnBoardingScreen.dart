@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:openlibrary_book_explorer/Configuration/Colors.dart';
+import 'package:openlibrary_book_explorer/Configuration/Routes.dart';
 import 'package:openlibrary_book_explorer/Models/OnBoardingModel.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomBottom.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomImageView.dart';
@@ -48,17 +49,17 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               children: [
                 SizedBox(height: 80),
                 CommonImageView(imagePath: model[index].image, scale: 3),
-                SizedBox(height: 40),
+                SizedBox(height: 20),
                 MyText(
                   text: model[index].title.toString(),
-                  size: 24,
+                  size: 23,
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
                 SizedBox(height: 10),
                 MyText(
                   text: model[index].subTitle.toString(),
-                  size: 19,
+                  size: 16,
                   color: Colors.white,
                   textAlign: TextAlign.center,
                 ),
@@ -74,7 +75,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         paddingTop: 10,
         btnLabel: "Skip",
         borderRadius: BorderRadius.circular(20),
-        onPressed: () {}
+        onPressed: () => AppRoutes.home
       ),
     );
   }

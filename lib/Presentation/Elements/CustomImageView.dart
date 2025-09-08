@@ -16,6 +16,7 @@ class CommonImageView extends StatelessWidget {
   Color? svgColor;
   double? scale;
 
+
   CommonImageView({
     super.key,
     this.url,
