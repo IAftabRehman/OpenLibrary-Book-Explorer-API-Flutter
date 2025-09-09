@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:openlibrary_book_explorer/Configuration/ChangeMode.dart';
+import 'package:provider/provider.dart';
 
 
 class MyButton extends StatelessWidget {
@@ -49,6 +51,7 @@ class MyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return GestureDetector(
       onTap: onPressed,
       child: Padding(
@@ -66,7 +69,7 @@ class MyButton extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: borderRadius ?? BorderRadius.circular(10),
             border: border,
-            color: color ?? Colors.white,
+            color: color ?? themeProvider.buttonBackgroundColor,
           ),
           child: Center(
 
@@ -79,7 +82,7 @@ class MyButton extends StatelessWidget {
                     fontSize: fontSize ?? 18,
                     fontWeight: fontWeight ?? FontWeight.w600,
                     letterSpacing: letterSpacing ?? 0,
-                    color: textColor ?? Colors.blue,
+                    color: textColor ?? themeProvider.buttonTextColor,
                   ),
             ),
           ),

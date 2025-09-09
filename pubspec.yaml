@@ -37,6 +37,7 @@ dependencies:
   flutter_animate: ^4.5.2 # For Animation (Like Button Animate)
   flutter_bounce: ^1.1.0  # For Bounce (Like Button Bounce)
   video_player: ^2.10.0   # For Video Playing (Like in Splash Screen)
+  provider: ^6.1.5+1
 
 dev_dependencies:
   flutter_test:

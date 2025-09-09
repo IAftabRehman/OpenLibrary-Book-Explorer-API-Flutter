@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../Configuration/ChangeMode.dart';
 
 // ignore: must_be_immutable
 class MyText extends StatelessWidget {
@@ -53,6 +56,7 @@ class MyText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -71,7 +75,7 @@ class MyText extends StatelessWidget {
                 foreground: paint,
                 shadows: shadow,
                 fontSize: size ?? 15,
-                color: color ?? Colors.black,
+                color: color ?? themeProvider.primaryTextColor,
                 fontWeight: fontWeight,
                 decoration: decoration,
                 decorationColor: color,

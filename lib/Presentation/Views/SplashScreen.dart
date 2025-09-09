@@ -39,14 +39,19 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Center(
         child: _controller.value.isInitialized
-            ? AspectRatio(
-          aspectRatio: _controller.value.aspectRatio,
-          child: VideoPlayer(_controller),
-        )
-            : CircularProgressIndicator(),
+            ? SizedBox.expand(
+                // fills the screen
+                child: FittedBox(
+                  fit: BoxFit.cover, // cover = fills screen, crops if needed
+                  child: SizedBox(
+                    width: _controller.value.size.width,
+                    height: _controller.value.size.height,
+                    child: VideoPlayer(_controller),
+                  ),
+                ),
+              )
+            : const CircularProgressIndicator(),
       ),
     );
   }
 }
-
-

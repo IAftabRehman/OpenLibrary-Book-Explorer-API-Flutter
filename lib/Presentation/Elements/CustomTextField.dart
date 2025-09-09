@@ -63,6 +63,9 @@ class MyTextField extends StatefulWidget {
   final Color? prefixBasicIconColor;
   final String? obscuringCharacter;
   final Color? passwordIconColor;
+  final Color? labelColor;
+  final Color? suffixColor;
+  final double? labelSize;
 
 
   const MyTextField({
@@ -127,7 +130,10 @@ class MyTextField extends StatefulWidget {
     this.paddingRight,
     this.paddingLeft,
     this.obscuringCharacter,
-    this.passwordIconColor
+    this.passwordIconColor,
+    this.suffixColor,
+    this.labelColor,
+    this.labelSize
   });
 
   @override
@@ -194,10 +200,10 @@ class _MyTextFieldState extends State<MyTextField> {
                 InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.auto,
                   labelText: widget.labelText,
-                  labelStyle: const TextStyle(
+                  labelStyle: TextStyle(
                     fontFamily: 'Poppins',
-                    color: Colors.black,
-                    fontSize: 20,
+                    color: widget.labelColor ?? Colors.black,
+                    fontSize: widget.labelSize ?? 20,
                     fontWeight: FontWeight.normal,
                   ),
                   isDense: true,
@@ -225,7 +231,7 @@ class _MyTextFieldState extends State<MyTextField> {
                       widget.prefixIconConstraints ??
                       const BoxConstraints(minWidth: 36, minHeight: 36),
                   suffixStyle: widget.suffixStyle,
-                  suffixIcon:widget.isPasswordField
+                  suffixIcon:widget.suffixIcon != null ? Icon(widget.suffixIcon, size: 25, color: widget.suffixColor,) : widget.isPasswordField
                       ? IconButton(
                     icon: Icon(
                       isTextObscured
