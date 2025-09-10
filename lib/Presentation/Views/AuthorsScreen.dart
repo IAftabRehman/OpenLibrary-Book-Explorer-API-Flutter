@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../Configuration/ChangeMode.dart';
+import '../../Providers/ChangeModeProvider.dart';
 import '../../Models/AuthorsModel.dart';
 import '../Elements/CustomContainer.dart';
 import '../Elements/CustomText.dart';

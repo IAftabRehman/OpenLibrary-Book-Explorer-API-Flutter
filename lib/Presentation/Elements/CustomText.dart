@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../Configuration/ChangeMode.dart';
+import '../../Providers/ChangeModeProvider.dart';
 
 // ignore: must_be_immutable
 class MyText extends StatelessWidget {

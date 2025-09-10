@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:openlibrary_book_explorer/Configuration/ChangeMode.dart';
+import 'package:openlibrary_book_explorer/Providers/ChangeModeProvider.dart';
 import 'package:openlibrary_book_explorer/Configuration/Routes.dart';
 import 'package:openlibrary_book_explorer/Presentation/CommonWidgets/AuthenticationTextField.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomBottom.dart';
@@ -109,7 +109,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 btnLabel: "Sign Up",
                 paddingLeft: 70,
                 paddingRight: 70,
-                onPressed: () {},
+                onPressed: () {
+
+                },
               ),
               const SizedBox(height: 20),
 

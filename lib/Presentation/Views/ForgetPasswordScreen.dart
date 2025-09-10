@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../Configuration/ChangeMode.dart';
+import '../../Providers/ChangeModeProvider.dart';
 import '../CommonWidgets/AuthenticationTextField.dart';
 import '../Elements/CustomBottom.dart';
 import '../Elements/CustomContainer.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:openlibrary_book_explorer/Configuration/ChangeMode.dart';
+import 'package:openlibrary_book_explorer/Providers/ChangeModeProvider.dart';
 import 'package:openlibrary_book_explorer/Models/CategoriesModel.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomText.dart';
 import 'package:provider/provider.dart';

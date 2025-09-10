@@ -6,7 +6,7 @@ import 'package:openlibrary_book_explorer/Presentation/Elements/CustomImageView.
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomText.dart';
 import 'package:provider/provider.dart';
 
-import '../../Configuration/ChangeMode.dart';
+import '../../Providers/ChangeModeProvider.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});

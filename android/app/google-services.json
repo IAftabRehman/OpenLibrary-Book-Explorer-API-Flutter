@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1086146711395",
+    "project_id": "openlibrary-book-explorer",
+    "storage_bucket": "openlibrary-book-explorer.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1086146711395:android:de506a70a68e6365410d56",
+        "android_client_info": {
+          "package_name": "com.example.openlibrary_book_explorer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgIpLaeeYzGMkyMCFGXb42aCiNL_6szDs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

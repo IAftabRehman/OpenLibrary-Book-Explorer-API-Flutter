@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../Configuration/ChangeMode.dart';
+import '../../Providers/ChangeModeProvider.dart';
 import '../Elements/CustomContainer.dart';
 
 class ProfileScreen extends StatelessWidget {
