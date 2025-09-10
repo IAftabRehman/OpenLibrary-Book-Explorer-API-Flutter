@@ -1,17 +1,16 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:openlibrary_book_explorer/Configuration/ChangeMode.dart';
 import 'package:provider/provider.dart';
 import 'Configuration/Routes.dart';
+import 'firebase_options.dart';
 
-void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
-      ],
-      child: const MyApp(),
-    ),
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
   );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -19,12 +18,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "OpenLibrary Book Explorer",
-      // home: SignUpScreen(),
-      initialRoute: AppRoutes.splash,
-      routes: AppRoutes.routes,
+    return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: "OpenLibrary Book Explorer",
+        // home: HomeScreen(),
+        initialRoute: AppRoutes.splash,
+        routes: AppRoutes.routes,
+      ),
     );
   }
 }

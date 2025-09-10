@@ -92,7 +92,9 @@ class _LogInScreenState extends State<LogInScreen> {
               btnLabel: "LogIn",
               paddingLeft: 70,
               paddingRight: 70,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, AppRoutes.home);
+              },
             ),
             const SizedBox(height: 15),
 

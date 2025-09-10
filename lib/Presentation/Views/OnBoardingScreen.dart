@@ -54,9 +54,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    /// First Top Padding
                     SizedBox(height: 200),
+
+                    /// Image
                     CommonImageView(imagePath: model[index].image, scale: 3),
                     SizedBox(height: 20),
+
+                    /// Title
                     MyText(
                       text: model[index].title.toString(),
                       size: 24,
@@ -64,6 +69,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                     SizedBox(height: 10),
+
+                    /// Subtitle
                     MyText(
                       text: model[index].subTitle.toString(),
                       size: 17,
@@ -72,6 +79,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       fontWeight: FontWeight.w600,
                     ),
                     const Spacer(),
+
+                    /// Skip Button
                     MyButton(
                         paddingLeft: 100,
                         paddingRight: 100,
