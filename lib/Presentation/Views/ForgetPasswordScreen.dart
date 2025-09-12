@@ -54,7 +54,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
             AuthenticationTextField(
               controller: emailController,
               keyboard: TextInputType.emailAddress,
-              labelText: "Email",
+              hintText: "Email",
               suffixIcon: Icons.email_outlined,
               isPasswordField: false,
             ),

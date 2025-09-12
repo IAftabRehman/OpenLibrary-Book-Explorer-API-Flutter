@@ -5,6 +5,7 @@ import 'package:openlibrary_book_explorer/Presentation/CommonWidgets/Authenticat
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomBottom.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomText.dart';
 import 'package:provider/provider.dart';
+import '../../Providers/AuthenticationProvider.dart';
 import '../Elements/CustomContainer.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -59,7 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               AuthenticationTextField(
                 controller: nameController,
                 keyboard: TextInputType.name,
-                labelText: "Name",
+                hintText: "Name",
                 suffixIcon: Icons.person_outline,
                 isPasswordField: false,
               ),
@@ -69,7 +70,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               AuthenticationTextField(
                 controller: ageController,
                 keyboard: TextInputType.number,
-                labelText: "Age",
+                hintText: "Age",
                 suffixIcon: Icons.cake_outlined,
                 isPasswordField: false,
               ),
@@ -79,7 +80,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               AuthenticationTextField(
                 controller: numberController,
                 keyboard: TextInputType.phone,
-                labelText: "Phone",
+                hintText: "Phone",
                 suffixIcon: Icons.phone_outlined,
                 isPasswordField: false,
               ),
@@ -89,7 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               AuthenticationTextField(
                 controller: emailController,
                 keyboard: TextInputType.emailAddress,
-                labelText: "Email",
+                hintText: "Email",
                 suffixIcon: Icons.email_outlined,
                 isPasswordField: false,
               ),
@@ -99,20 +100,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
               AuthenticationTextField(
                 controller: passwordController,
                 keyboard: TextInputType.visiblePassword,
-                labelText: "Password",
+                hintText: "Password",
                 isPasswordField: true,
               ),
               const SizedBox(height: 20),
 
               /// Below Button
-              MyButton(
-                btnLabel: "Sign Up",
-                paddingLeft: 70,
-                paddingRight: 70,
-                onPressed: () {
-
+              Consumer<AuthenticationProvider>(
+                builder: (context, provider, child) {
+                  return provider.isLoading
+                      ? const CircularProgressIndicator()
+                      : MyButton(
+                    btnLabel: "Sign Up",
+                    paddingLeft: 70,
+                    paddingRight: 70,
+                    onPressed: () {
+                      provider.signUp(
+                        nameController.text.trim(),
+                        int.tryParse(ageController.text.trim()) ?? 0,
+                        numberController.text.trim(),
+                        emailController.text.trim(),
+                        passwordController.text.trim(),
+                      );
+                    },
+                  );
                 },
               ),
+
               const SizedBox(height: 20),
 
               /// Navigate Login Screen Text
@@ -127,7 +141,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   decoration: TextDecoration.underline,
                   onTap: () {
                     Navigator.pushNamed(context, AppRoutes.login);
-                  }
+                  },
                 ),
               ),
             ],

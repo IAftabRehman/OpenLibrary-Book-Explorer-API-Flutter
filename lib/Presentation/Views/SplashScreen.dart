@@ -23,7 +23,6 @@ class _SplashScreenState extends State<SplashScreen> {
         Future.delayed(Duration(seconds: 5), () {
           Navigator.pushReplacementNamed(context, AppRoutes.onBoarding);
         });
-
         setState(() {});
       });
   }

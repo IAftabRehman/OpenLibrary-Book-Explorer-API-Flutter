@@ -17,6 +17,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   List<CategoriesModel> categoriesModel = [
     CategoriesModel(name: "Fiction"),
     CategoriesModel(name: "Non-Fiction"),
@@ -40,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     AuthorsModel(name: "Stephen King"),
   ];
 
-  List<FavouriteBookModel>  favouriteBookModel= [
+  List<FavouriteBookModel> favouriteBookModel = [
     FavouriteBookModel(name: "Fiction"),
     FavouriteBookModel(name: "Non-Fiction"),
     FavouriteBookModel(name: "Science"),
@@ -50,12 +52,66 @@ class _HomeScreenState extends State<HomeScreen> {
     FavouriteBookModel(name: "Businesses"),
   ];
 
-
-
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
+      key: _scaffoldKey,
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        backgroundColor: Colors.black.withOpacity(0.2),
+        elevation: 0, // remove shadow
+        leading: MyIconContainer(
+          onTap: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+          icon: Icons.menu,
+          iconSize: 30,
+          iconColor: Colors.white70,
+        ),
+        title: MyText(
+          text: "OpenLibrary Book Explorer",
+          color: Colors.white70,
+          fontWeight: FontWeight.bold,
+          size: 22,
+        ),
+      ),
+      drawer: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.6,
+        child: Drawer(
+          child: MyContainer(
+            decoration: BoxDecoration(gradient: themeProvider.backgroundColor),
+            child: Column(
+              children: [
+                DrawerHeader(
+                  child: Column(
+                    children: [
+                      MyContainer(
+                        height: 80,
+                        width: 80,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/background.jpg'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      MyText(text: "Aftab Ur Rehman", size: 16, fontWeight: FontWeight.bold, color: themeProvider.primaryTextColor),
+                      MyText(text: "iamaftabrehman@gmail.com", size: 12, color: themeProvider.primaryTextColor)
+                    ],
+                  )
+                ),
+                ListTile(title: Text("Books")),
+                ListTile(title: Text("Authors")),
+              ],
+            ),
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -74,30 +130,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      children: [
-                        MyIconContainer(
-                          icon: Icons.search_sharp,
-                          iconSize: 30,
-                          iconColor: Colors.white70,
-                        ),
-
-                        const SizedBox(width: 10),
-
-                        MyText(
-                          text: "OpenLibrary Book Explorer",
-                          color: Colors.white70,
-                          fontWeight: FontWeight.bold,
-                          size: 22,
-                        ),
-                      ],
-                    ),
-                  ),
-        
                   const SizedBox(height: 40),
-        
+
                   listViewContainer(
                     context,
                     themeProvider,
@@ -107,13 +141,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                     categoriesModel,
                   ),
-        
+
                   const SizedBox(height: 50),
-        
+
                   listViewContainer(context, themeProvider, "Book Authors", () {
                     Navigator.pushNamed(context, AppRoutes.authors);
                   }, authorsModel),
-        
+
                   const SizedBox(height: 50),
 
                   listViewContainer(context, themeProvider, "Book Authors", () {
