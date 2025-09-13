@@ -100,13 +100,94 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const Spacer(),
-                      MyText(text: "Aftab Ur Rehman", size: 16, fontWeight: FontWeight.bold, color: themeProvider.primaryTextColor),
-                      MyText(text: "iamaftabrehman@gmail.com", size: 12, color: themeProvider.primaryTextColor)
+                      MyText(
+                        text: "Aftab Ur Rehman",
+                        size: 16,
+                        fontWeight: FontWeight.bold,
+                        color: themeProvider.primaryTextColor,
+                      ),
+                      MyText(
+                        text: "iamaftabrehman@gmail.com",
+                        size: 12,
+                        color: themeProvider.primaryTextColor,
+                      ),
                     ],
-                  )
+                  ),
                 ),
-                ListTile(title: Text("Books")),
-                ListTile(title: Text("Authors")),
+
+                ListTile(
+                  leading: Icon(
+                    Icons.library_books_outlined,
+                    color: themeProvider.primaryTextColor,
+                  ),
+                  title: MyText(
+                    text: "My Library",
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.category_outlined,
+                    color: themeProvider.primaryTextColor,
+                  ),
+                  title: MyText(
+                    text: "Categories",
+                    fontWeight: FontWeight.bold,
+                  ),
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRoutes.categories);
+                  },
+                ),
+
+                ListTile(
+                  leading: Icon(
+                    Icons.person_outlined,
+                    color: themeProvider.primaryTextColor,
+                  ),
+                  title: MyText(text: "Authors", fontWeight: FontWeight.bold),
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRoutes.authors);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.favorite_outline,
+                    color: themeProvider.primaryTextColor,
+                  ),
+                  title: MyText(text: "Favorite", fontWeight: FontWeight.bold),
+                ),
+                ListTile(
+                  leading: Icon(
+                    themeProvider.isNightMode
+                        ? Icons.dark_mode
+                        : Icons.light_mode,
+                    color: themeProvider.primaryTextColor,
+                  ),
+                  title: MyText(
+                    text: themeProvider.isNightMode
+                        ? "Dark Mode"
+                        : "Light Mode",
+                    color: themeProvider.primaryTextColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  onTap: () {
+                    themeProvider.toggleTheme();
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.question_mark_outlined,
+                    color: themeProvider.primaryTextColor,
+                  ),
+                  title: MyText(text: "Help", fontWeight: FontWeight.bold),
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.logout,
+                    color: themeProvider.primaryTextColor,
+                  ),
+                  title: MyText(text: "LogOut", fontWeight: FontWeight.bold),
+                ),
               ],
             ),
           ),

@@ -89,7 +89,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         btnLabel: "Skip",
                         borderRadius: BorderRadius.circular(20),
                         onPressed: () {
-                          Navigator.pushNamed(context, AppRoutes.login);
+                          Navigator.pushNamed(context, AppRoutes.home);
                         }
                     ),
                   ],

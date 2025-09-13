@@ -52,20 +52,19 @@ class AuthenticationProvider extends ChangeNotifier {
       isLoading = true;
       notifyListeners();
 
-      await AuthenticationServices().loginUser(
-        email: email,
-        password: password,
-      );
+      final user = await AuthenticationServices()
+          .loginUser(email: email, password: password);
 
       isLoading = false;
       notifyListeners();
-      return true;
 
+      // if login is successful → return true
+      return user != null;
     } catch (e) {
       isLoading = false;
       notifyListeners();
       debugPrint("❌ Login Error: ${e.toString()}");
-      return false; // ❌ failure
+      return false; // login failed
     }
   }
 

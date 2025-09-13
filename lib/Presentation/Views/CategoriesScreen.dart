@@ -3,9 +3,7 @@ import 'package:openlibrary_book_explorer/Providers/ChangeModeProvider.dart';
 import 'package:openlibrary_book_explorer/Models/CategoriesModel.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomText.dart';
 import 'package:provider/provider.dart';
-
 import '../Elements/CustomContainer.dart';
-import '../Elements/CustomTextField.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
@@ -34,6 +32,23 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return SafeArea(
       child: Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: themeProvider.secondaryTextColor,
+          elevation: 0, // remove shadow
+          leading: MyIconContainer(
+            icon: Icons.menu,
+            iconSize: 30,
+            iconColor: themeProvider.primaryTextColor,
+          ),
+          title: MyText(
+            text: "Book Categories",
+            color: themeProvider.primaryTextColor,
+            fontWeight: FontWeight.bold,
+            size: 22,
+          ),
+        ),
         body: MyContainer(
           width: double.infinity,
           height: double.infinity,
@@ -42,44 +57,44 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  openSearch
-                      ? Expanded(
-                          child: MyTextField(
-                            backgroundColor: Colors.transparent,
-                            borderRadius: BorderRadius.circular(10),
-                            textFieldBorder: Border.all(
-                              width: 2,
-                              color: themeProvider.primaryTextColor,
-                            ),
-                            hintText: "Search Book",
-                            hintColor: themeProvider.primaryTextColor,
-                            cursorColor: themeProvider.primaryTextColor,
-                            textColor: themeProvider.primaryTextColor,
-                            textSize: 16,
-                          ),
-                        )
-                      : MyText(
-                          text: "Book Categories",
-                          size: 20,
-                          fontWeight: FontWeight.bold,
-                          color: themeProvider.primaryTextColor,
-                        ),
-                  const SizedBox(width: 10),
-                  MyIconContainer(
-                    icon: openSearch ? Icons.close : Icons.search,
-                    iconColor: themeProvider.primaryTextColor,
-                    iconSize: 30,
-                    onTap: () {
-                      setState(() {
-                        openSearch = !openSearch;
-                      });
-                    },
-                  ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     openSearch
+              //         ? Expanded(
+              //             child: MyTextField(
+              //               backgroundColor: Colors.transparent,
+              //               borderRadius: BorderRadius.circular(10),
+              //               textFieldBorder: Border.all(
+              //                 width: 2,
+              //                 color: themeProvider.primaryTextColor,
+              //               ),
+              //               hintText: "Search Book",
+              //               hintColor: themeProvider.primaryTextColor,
+              //               cursorColor: themeProvider.primaryTextColor,
+              //               textColor: themeProvider.primaryTextColor,
+              //               textSize: 16,
+              //             ),
+              //           )
+              //         : MyText(
+              //             text: "Book Categories",
+              //             size: 20,
+              //             fontWeight: FontWeight.bold,
+              //             color: themeProvider.primaryTextColor,
+              //           ),
+              //     const SizedBox(width: 10),
+              //     MyIconContainer(
+              //       icon: openSearch ? Icons.close : Icons.search,
+              //       iconColor: themeProvider.primaryTextColor,
+              //       iconSize: 30,
+              //       onTap: () {
+              //         setState(() {
+              //           openSearch = !openSearch;
+              //         });
+              //       },
+              //     ),
+              //   ],
+              // ),
 
               const SizedBox(height: 30),
 

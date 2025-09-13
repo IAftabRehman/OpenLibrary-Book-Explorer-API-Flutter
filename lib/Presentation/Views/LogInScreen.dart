@@ -100,6 +100,7 @@ class _LogInScreenState extends State<LogInScreen> {
                     passwordController.text.trim(),
                   );
 
+
                   if (success) {
                     showDialog(
                       context: context,
@@ -112,7 +113,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                 Navigator.pop(context); // close dialog
                                 Navigator.pushReplacementNamed(
                                   context,
-                                  AppRoutes.home
+                                  AppRoutes.home, // go to home
                                 );
                               },
                               child: const Text("Go to Home Page"),
