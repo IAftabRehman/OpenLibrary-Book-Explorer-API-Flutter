@@ -34,6 +34,12 @@ class AppColors{
   /// Secondary Text Color with Night Mode
   static const Color nightModeSecondaryTextColor = Colors.white70;
 
+  /// AppBar Background Color with Day Mode
+  static const Color dayModeAppBarBackgroundColor = Color(0xFFD0FCED);
+
+  /// AppBar Background Color with Nigh Mode
+  static const Color nightModeAppBarBackgroundColor = Color(0xFF3b0080);
+
   /// Button Background with Day Mode
   static const Color dayButtonBackground = Color(0xFF1976D2);
 

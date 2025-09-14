@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:openlibrary_book_explorer/Providers/AuthenticationProvider.dart';
+import 'package:openlibrary_book_explorer/Providers/CategoriesProvider.dart';
 import 'package:openlibrary_book_explorer/Providers/ChangeModeProvider.dart';
 import 'package:provider/provider.dart';
 import 'Configuration/Routes.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
+        ChangeNotifierProvider(create: (_) => LibraryProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

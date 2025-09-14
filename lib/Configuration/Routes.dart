@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/AuthorsScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/CategoriesScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/ForgetPasswordScreen.dart';
+import 'package:openlibrary_book_explorer/Presentation/Views/HelpScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/LogInScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/ProfileScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/SignUpScreen.dart';
@@ -19,6 +20,7 @@ class AppRoutes {
   static const String categories = '/categories';
   static const String authors = '/authors';
   static const String profile = '/profile';
+  static const String help = '/help';
 
 
   static Map<String, WidgetBuilder> routes = {
@@ -30,6 +32,7 @@ class AppRoutes {
     home: (context) => HomeScreen(),
     categories: (context) => CategoriesScreen(),
     authors: (context) => AuthorsScreen(),
-    profile: (context) => ProfileScreen()
+    profile: (context) => ProfileScreen(),
+    help: (context) => HelpScreen()
   };
 }

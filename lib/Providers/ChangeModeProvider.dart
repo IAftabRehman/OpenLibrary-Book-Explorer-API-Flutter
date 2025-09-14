@@ -20,6 +20,11 @@ class ThemeProvider extends ChangeNotifier {
       ? AppColors.nightModeSecondaryTextColor
       : AppColors.dayModeSecondaryTextColor;
 
+  /// AppBar Background Color
+  Color get appBarBackgroundColor => _isNightMode ?
+      AppColors.nightModeAppBarBackgroundColor :
+      AppColors.dayModeAppBarBackgroundColor;
+
   /// Button Background Color
   Color get buttonBackgroundColor => _isNightMode
       ? AppColors.nightButtonBackground

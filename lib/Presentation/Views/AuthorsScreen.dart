@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../Providers/ChangeModeProvider.dart';
 import '../../Models/AuthorsModel.dart';
+import '../CommonWidgets/AppBarWidget.dart';
+import '../CommonWidgets/Drawer.dart';
 import '../Elements/CustomContainer.dart';
 import '../Elements/CustomText.dart';
 import '../Elements/CustomTextField.dart';
@@ -14,6 +16,7 @@ class AuthorsScreen extends StatefulWidget {
 }
 
 class _AuthorsScreenState extends State<AuthorsScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool openSearch = false;
   List<AuthorsModel> authorsModel = [
     AuthorsModel(name: "J.K. Rowling"),
@@ -32,6 +35,11 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
+      key: _scaffoldKey,
+      extendBodyBehindAppBar: false,
+      backgroundColor: Colors.transparent,
+      appBar: AppBarWidget(titleText: "Authors", searchIcon: true),
+      drawer: DrawerWidget(),
       body: SafeArea(
         child: MyContainer(
           width: double.infinity,
@@ -41,12 +49,8 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  openSearch
-                      ? Expanded(
-                    child: MyTextField(
+              openSearch
+                  ? MyTextField(
                       backgroundColor: Colors.transparent,
                       borderRadius: BorderRadius.circular(10),
                       textFieldBorder: Border.all(
@@ -58,30 +62,9 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
                       cursorColor: themeProvider.primaryTextColor,
                       textColor: themeProvider.primaryTextColor,
                       textSize: 16,
-                    ),
-                  )
-                      : MyText(
-                    text: "Authors Names",
-                    size: 20,
-                    fontWeight: FontWeight.bold,
-                    color: themeProvider.primaryTextColor,
-                  ),
-                  const SizedBox(width: 10),
-                  MyIconContainer(
-                    icon: openSearch ? Icons.close : Icons.search,
-                    iconColor: themeProvider.primaryTextColor,
-                    iconSize: 30,
-                    onTap: () {
-                      setState(() {
-                        openSearch = !openSearch;
-                      });
-                    },
-                  ),
-                ],
-              ),
-        
-              const SizedBox(height: 30),
-        
+                    )
+                  : SizedBox(),
+
               Expanded(
                 child: ListView.builder(
                   itemCount: authorsModel.length,
@@ -93,7 +76,10 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
                         width: double.infinity,
                         color: themeProvider.buttonBackgroundColor,
                         borderRadius: BorderRadius.circular(10),
-                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 10,
+                        ),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: MyText(
