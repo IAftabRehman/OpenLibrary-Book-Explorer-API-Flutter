@@ -21,13 +21,63 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<CategoriesModel> categoriesModel = [
-    CategoriesModel(name: "Fiction"),
-    CategoriesModel(name: "Non-Fiction"),
-    CategoriesModel(name: "Science"),
-    CategoriesModel(name: "History"),
-    CategoriesModel(name: "Technology"),
-    CategoriesModel(name: "Kids"),
-    CategoriesModel(name: "Businesses"),
+    CategoriesModel(name: "Architecture", link: "architecture"),
+    CategoriesModel(name: "Art Instruction", link: "art__art_instruction"),
+    CategoriesModel(name: "Art History", link: "history_of_art__art__design_styles"),
+    CategoriesModel(name: "Dance", link: "dance"),
+    CategoriesModel(name: "Design", link: "design"),
+    CategoriesModel(name: "Fashion", link: "fashion"),
+    CategoriesModel(name: "Film", link: "film"),
+    CategoriesModel(name: "Graphic Design", link: "graphic_design"),
+    CategoriesModel(name: "Music", link: "music"),
+    CategoriesModel(name: "Music Theory", link: "music_theory"),
+    CategoriesModel(name: "Painting", link: "painting__paintings"),
+    CategoriesModel(name: "Photography", link: "photography"),
+    CategoriesModel(name: "Bears", link: "bears"),
+    CategoriesModel(name: "Cats", link: "cats"),
+    CategoriesModel(name: "Kittens", link: "kittens"),
+    CategoriesModel(name: "Dogs", link: "dogs"),
+    CategoriesModel(name: "Puppies", link: "puppies"),
+    CategoriesModel(name: "Fantasy", link: "fantasy"),
+    CategoriesModel(name: "Historical Fiction", link: "historical_fiction"),
+    CategoriesModel(name: "Horror", link: "horror"),
+    CategoriesModel(name: "Humor", link: "humor"),
+    CategoriesModel(name: "Literature", link: "literature"),
+    CategoriesModel(name: "Magic", link: "magic"),
+    CategoriesModel(name: "Mystery and Detective Stories", link: "mystery_and_detective_stories"),
+    CategoriesModel(name: "Plays", link: "plays"),
+    CategoriesModel(name: "Poetry", link: "poetry"),
+    CategoriesModel(name: "Romance", link: "romance"),
+    CategoriesModel(name: "Science Fiction", link: "science_fiction"),
+    CategoriesModel(name: "Short Stories", link: "short_stories"),
+    CategoriesModel(name: "Thriller", link: "thriller"),
+    CategoriesModel(name: "Young Adult", link: "young_adult_fiction"),
+    CategoriesModel(name: "Biology", link: "biology"),
+    CategoriesModel(name: "Chemistry", link: "chemistry"),
+    CategoriesModel(name: "Mathematics", link: "mathematics"),
+    CategoriesModel(name: "Physics", link: "physics"),
+    CategoriesModel(name: "Programming", link: "programming"),
+    CategoriesModel(name: "Management", link: "management"),
+    CategoriesModel(name: "Entrepreneurship", link: "entrepreneurship"),
+    CategoriesModel(name: "Business Economics", link: "business__economics"),
+    CategoriesModel(name: "Business Success", link: "success_in_business"),
+    CategoriesModel(name: "Finance", link: "finance"),
+    CategoriesModel(name: "Juvenile Literature", link: "juvenile_literature"),
+    CategoriesModel(name: "Infancy", link: "infancy"),
+    CategoriesModel(name: "Stories in Rhyme", link: "stories_in_rhyme"),
+    CategoriesModel(name: "Bedtime Books", link: "bedtime"),
+    CategoriesModel(name: "Picture Books", link: "picture_books"),
+    CategoriesModel(name: "Ancient Civilization", link: "ancient_civilization"),
+    CategoriesModel(name: "Archaeology", link: "archaeology"),
+    CategoriesModel(name: "Anthropology", link: "anthropology"),
+    CategoriesModel(name: "Mental Health", link: "mental_health"),
+    CategoriesModel(name: "Exercise", link: "exercise"),
+    CategoriesModel(name: "Nutrition", link: "nutrition"),
+    CategoriesModel(name: "Self-help", link: "self-help"),
+    CategoriesModel(name: "Autobiographies", link: "autonutritionbiography"),
+    CategoriesModel(name: "Religion", link: "religion"),
+    CategoriesModel(name: "Political Science", link: "political_science"),
+    CategoriesModel(name: "Psychology", link: "psychology"),
   ];
 
   List<AuthorsModel> authorsModel = [
@@ -147,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                MyText(text: titleName, size: 16, color: Colors.white70),
+                MyText(text: titleName, size: 18, color: Colors.white70),
                 MyText(
                   text: "See All",
                   color: Colors.green,
@@ -167,6 +217,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: MyContainer(
+                    onTap: (){
+                      titleName == "Book Categoires" ? Navigator.pushNamed(context, AppRoutes.individualCategory, arguments: {
+                      "name": categoriesModel[index].name,
+                      "link": categoriesModel[index].link,
+                      }) : Navigator.pushNamed(context, AppRoutes.authors);
+                    },
                     decoration: BoxDecoration(
                       gradient: themeProvider.backgroundColor,
                       borderRadius: BorderRadius.circular(10),

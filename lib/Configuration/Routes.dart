@@ -3,6 +3,7 @@ import 'package:openlibrary_book_explorer/Presentation/Views/AuthorsScreen.dart'
 import 'package:openlibrary_book_explorer/Presentation/Views/CategoriesScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/ForgetPasswordScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/HelpScreen.dart';
+import 'package:openlibrary_book_explorer/Presentation/Views/IndividualCategory.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/LogInScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/ProfileScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/SignUpScreen.dart';
@@ -20,8 +21,8 @@ class AppRoutes {
   static const String categories = '/categories';
   static const String authors = '/authors';
   static const String profile = '/profile';
+  static const String individualCategory = '/individualCategory';
   static const String help = '/help';
-
 
   static Map<String, WidgetBuilder> routes = {
     splash: (context) => SplashScreen(),
@@ -33,6 +34,22 @@ class AppRoutes {
     categories: (context) => CategoriesScreen(),
     authors: (context) => AuthorsScreen(),
     profile: (context) => ProfileScreen(),
-    help: (context) => HelpScreen()
+    help: (context) => HelpScreen(),
   };
+
+  static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case AppRoutes.individualCategory:
+        final args = settings.arguments as Map<String, dynamic>;
+        return CupertinoPageRoute(
+          builder: (_) => IndividualCategory(
+            categoryName: args["name"],
+            categoryLink: args["link"],
+          ),
+        );
+
+      default:
+        return null;
+    }
+  }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:openlibrary_book_explorer/Providers/LibraryProvider.dart';
 import 'package:provider/provider.dart';
 import '../../Providers/ChangeModeProvider.dart';
-import '../../Models/AuthorsModel.dart';
 import '../CommonWidgets/AppBarWidget.dart';
 import '../CommonWidgets/Drawer.dart';
 import '../Elements/CustomContainer.dart';
@@ -18,22 +18,18 @@ class AuthorsScreen extends StatefulWidget {
 class _AuthorsScreenState extends State<AuthorsScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool openSearch = false;
-  List<AuthorsModel> authorsModel = [
-    AuthorsModel(name: "J.K. Rowling"),
-    AuthorsModel(name: "George R.R. Martin"),
-    AuthorsModel(name: "Jane Austen"),
-    AuthorsModel(name: "Charles Dickens"),
-    AuthorsModel(name: "Mark Twain"),
-    AuthorsModel(name: "Agatha Christie"),
-    AuthorsModel(name: "Ernest Hemingway"),
-    AuthorsModel(name: "J.R.R. Tolkien"),
-    AuthorsModel(name: "Leo Tolstoy"),
-    AuthorsModel(name: "Stephen King"),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      Provider.of<LibraryProvider>(context, listen: false).fetchAllAuthors();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final libraryProvider = Provider.of<LibraryProvider>(context);
     return Scaffold(
       key: _scaffoldKey,
       extendBodyBehindAppBar: false,
@@ -66,33 +62,40 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
                   : SizedBox(),
 
               Expanded(
-                child: ListView.builder(
-                  itemCount: authorsModel.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: MyContainer(
-                        height: 70,
-                        width: double.infinity,
-                        color: themeProvider.buttonBackgroundColor,
-                        borderRadius: BorderRadius.circular(10),
-                        padding: EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 10,
-                        ),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: MyText(
-                            text: authorsModel[index].name,
-                            size: 18,
-                            fontWeight: FontWeight.bold,
-                            color: themeProvider.primaryTextColor,
-                          ),
-                        ),
+                child: libraryProvider.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                        itemCount: libraryProvider.books.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: MyContainer(
+                              height: 70,
+                              width: double.infinity,
+                              color: themeProvider.buttonBackgroundColor,
+                              borderRadius: BorderRadius.circular(10),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 10,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: MyText(
+                                      text: libraryProvider.books[index].toString(),
+                                      size: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: themeProvider.primaryTextColor,
+                                    ),
+                                  ),
+                                  Image.asset('assets/icons/author.png', height: 50, width: 50, fit: BoxFit.cover,)
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
             ],
           ),
