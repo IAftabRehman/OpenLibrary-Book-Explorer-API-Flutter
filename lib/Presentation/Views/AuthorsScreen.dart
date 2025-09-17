@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:openlibrary_book_explorer/Configuration/Routes.dart';
 import 'package:openlibrary_book_explorer/Providers/LibraryProvider.dart';
 import 'package:provider/provider.dart';
 import '../../Providers/ChangeModeProvider.dart';
@@ -18,6 +19,7 @@ class AuthorsScreen extends StatefulWidget {
 class _AuthorsScreenState extends State<AuthorsScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool openSearch = false;
+
   @override
   void initState() {
     super.initState();
@@ -65,31 +67,59 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
                 child: libraryProvider.isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(
-                        itemCount: libraryProvider.books.length,
+                        itemCount: libraryProvider.authors.length,
                         itemBuilder: (context, index) {
+                          var author = libraryProvider.authors[index];
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8),
                             child: MyContainer(
+                              onTap: () async {
+                                String authorKey = author['key'] ?? "";
+
+                                // make sure it always starts with "/authors/"
+                                if (!authorKey.startsWith("/authors/")) {
+                                  authorKey = "/authors/$authorKey";
+                                }
+
+                                final details = await libraryProvider.fetchAuthorDetails(authorKey);
+
+                                if (context.mounted) { // ✅ to avoid "deactivated widget" error
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRoutes.authorDetails,
+                                    arguments: {
+                                      "authorDetails": details,
+                                    },
+                                  );
+                                }
+                              },
+
                               height: 70,
                               width: double.infinity,
                               color: themeProvider.buttonBackgroundColor,
                               borderRadius: BorderRadius.circular(10),
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 vertical: 10,
                                 horizontal: 10,
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: MyText(
-                                      text: libraryProvider.books[index].toString(),
+                                      text: author["name"] ?? "Unknown Author",
                                       size: 18,
                                       fontWeight: FontWeight.bold,
                                       color: themeProvider.primaryTextColor,
                                     ),
                                   ),
-                                  Image.asset('assets/icons/author.png', height: 50, width: 50, fit: BoxFit.cover,)
+                                  Image.asset(
+                                    'assets/icons/author.png',
+                                    height: 50,
+                                    width: 50,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ],
                               ),
                             ),

@@ -91,6 +91,16 @@ class _HomeScreenState extends State<HomeScreen> {
     AuthorsModel(name: "J.R.R. Tolkien"),
     AuthorsModel(name: "Leo Tolstoy"),
     AuthorsModel(name: "Stephen King"),
+    AuthorsModel(name: "Joseph D. Bates, Jr."),
+    AuthorsModel(name: "James D. Lester, Sr."),
+    AuthorsModel(name: "Robert Deward Mason"),
+    AuthorsModel(name: "Charles Dana Gibson"),
+    AuthorsModel(name: "Thomas Dionysius Clark"),
+    AuthorsModel(name: "M. D. D. Evans"),
+    AuthorsModel(name: "Hugh D.Young"),
+    AuthorsModel(name: "Donald D. Spencer"),
+    AuthorsModel(name: "Anthony D. Smith"),
+    AuthorsModel(name: "Christian d' Elvert"),
   ];
 
   List<FavouriteBookModel> favouriteBookModel = [
@@ -149,6 +159,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 40),
+
+                  listViewContainer(
+                    context,
+                    themeProvider,
+                    "Trending Book",
+                        () {
+                      Navigator.pushNamed(context, AppRoutes.trendingBook);
+                    },
+                    categoriesModel,
+                  ),
+
+                  const SizedBox(height: 50),
 
                   listViewContainer(
                     context,

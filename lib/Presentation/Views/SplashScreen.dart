@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
         _controller.play();
         _controller.setLooping(false);
 
-        Future.delayed(Duration(seconds: 5), () {
+        Future.delayed(Duration(seconds: 1), () {
           Navigator.pushReplacementNamed(context, AppRoutes.onBoarding);
         });
         setState(() {});
@@ -39,16 +39,15 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
         child: _controller.value.isInitialized
             ? SizedBox.expand(
-                // fills the screen
-                child: FittedBox(
-                  fit: BoxFit.cover, // cover = fills screen, crops if needed
-                  child: SizedBox(
-                    width: _controller.value.size.width,
-                    height: _controller.value.size.height,
-                    child: VideoPlayer(_controller),
-                  ),
-                ),
-              )
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: SizedBox(
+              width: _controller.value.size.width,
+              height: _controller.value.size.height,
+              child: VideoPlayer(_controller),
+            ),
+          ),
+        )
             : const CircularProgressIndicator(),
       ),
     );

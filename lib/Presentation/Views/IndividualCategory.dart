@@ -10,10 +10,10 @@ import '../Elements/CustomText.dart';
 import '../Elements/CustomTextField.dart';
 
 class IndividualCategory extends StatefulWidget {
-  final String categoryName;
+  final String authorDetails;
   final String? categoryLink;
 
-  const IndividualCategory({super.key, required this.categoryName, this.categoryLink});
+  const IndividualCategory({super.key, required this.authorDetails, this.categoryLink});
 
   @override
   State<IndividualCategory> createState() => _IndividualCategoryState();
@@ -42,7 +42,7 @@ class _IndividualCategoryState extends State<IndividualCategory> {
       extendBodyBehindAppBar: false,
       backgroundColor: Colors.transparent,
       appBar: AppBarWidget(
-        titleText: widget.categoryName.toString(),
+        titleText: widget.authorDetails.toString(),
         searchIcon: true,
       ),
       drawer: DrawerWidget(),

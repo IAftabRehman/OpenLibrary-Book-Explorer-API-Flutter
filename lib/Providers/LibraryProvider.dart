@@ -6,6 +6,34 @@ class LibraryProvider extends ChangeNotifier {
   bool isLoading = false;
   List<dynamic> books = [];
   List authors = [];
+  List selectedAuthor = [];
+
+  Future<void> fetchTrendingBooks() async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      final url = Uri.parse("https://openlibrary.org/trending/now.json"); // ✅ always use .json
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        // 'works' is always a List in trending API
+        books = (data['works'] as List?) ?? [];
+      } else {
+        books = [];
+        debugPrint("❌ Failed to load books: ${response.statusCode}");
+      }
+    } catch (e) {
+      books = [];
+      debugPrint("🔥 Error fetching books: $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
 
   /// Fetch Book by Categories
   Future<void> fetchBooksByCategory(String category) async {
@@ -63,6 +91,34 @@ class LibraryProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  /// Fetch Author Details
+  Future<Map<String, dynamic>?> fetchAuthorDetails(String authorKey) async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      final url = Uri.parse("https://openlibrary.org$authorKey.json");
+      debugPrint("📡 Fetching: $url");
+
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        debugPrint("❌ Failed with status: ${response.statusCode}");
+        return null;
+      }
+    } catch (e) {
+      debugPrint("❌ Error fetching author details: $e");
+      return null;
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+
 
 
 }

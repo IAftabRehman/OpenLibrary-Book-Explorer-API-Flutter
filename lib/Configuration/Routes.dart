@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:openlibrary_book_explorer/Presentation/Views/AuthorDetails.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/AuthorsScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/CategoriesScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/ForgetPasswordScreen.dart';
@@ -7,6 +8,7 @@ import 'package:openlibrary_book_explorer/Presentation/Views/IndividualCategory.
 import 'package:openlibrary_book_explorer/Presentation/Views/LogInScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/ProfileScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/SignUpScreen.dart';
+import 'package:openlibrary_book_explorer/Presentation/Views/TrendingBook.dart';
 import '../Presentation/Views/HomeScreen.dart';
 import '../Presentation/Views/OnBoardingScreen.dart';
 import '../Presentation/Views/SplashScreen.dart';
@@ -22,6 +24,8 @@ class AppRoutes {
   static const String authors = '/authors';
   static const String profile = '/profile';
   static const String individualCategory = '/individualCategory';
+  static const String authorDetails = '/authorDetails';
+  static const String trendingBook = '/trendingBook';
   static const String help = '/help';
 
   static Map<String, WidgetBuilder> routes = {
@@ -34,6 +38,7 @@ class AppRoutes {
     categories: (context) => CategoriesScreen(),
     authors: (context) => AuthorsScreen(),
     profile: (context) => ProfileScreen(),
+    trendingBook: (context) => TrendingBook(),
     help: (context) => HelpScreen(),
   };
 
@@ -43,8 +48,15 @@ class AppRoutes {
         final args = settings.arguments as Map<String, dynamic>;
         return CupertinoPageRoute(
           builder: (_) => IndividualCategory(
-            categoryName: args["name"],
+            authorDetails: args["name"],
             categoryLink: args["link"],
+          ),
+        );
+      case AppRoutes.authorDetails:
+        final args = settings.arguments as Map<String, dynamic>;
+        return CupertinoPageRoute(
+          builder: (_) => AuthorDetails(
+            authorDetails: args["authorDetails"],
           ),
         );
 
