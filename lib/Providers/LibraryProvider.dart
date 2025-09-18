@@ -8,19 +8,58 @@ class LibraryProvider extends ChangeNotifier {
   List authors = [];
   List selectedAuthor = [];
 
+  /// Fetch Trending Books + Author Details
   Future<void> fetchTrendingBooks() async {
     try {
       isLoading = true;
       notifyListeners();
 
-      final url = Uri.parse("https://openlibrary.org/trending/now.json"); // ✅ always use .json
+      final url = Uri.parse("https://openlibrary.org/trending/now.json?limit=10");
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
 
-        // 'works' is always a List in trending API
-        books = (data['works'] as List?) ?? [];
+        final works = (data['works'] as List?) ?? [];
+
+        // Enrich each work with author details
+        books = await Future.wait(works.map((work) async {
+          final authors = work['author_key'] as List?;
+          List<Map<String, dynamic>> authorDetails = [];
+
+          if (authors != null) {
+            for (final key in authors) {
+              try {
+                final authorUrl =
+                Uri.parse("https://openlibrary.org/authors/$key.json");
+                final authorResponse = await http.get(authorUrl);
+
+                if (authorResponse.statusCode == 200) {
+                  final authorData = json.decode(authorResponse.body);
+                  authorDetails.add(authorData);
+                }
+              } catch (e) {
+                debugPrint("🔥 Error fetching author $key: $e");
+              }
+            }
+          }
+
+          // ✅ fallback to basic names if details missing
+          if (authorDetails.isEmpty && work['author_name'] != null) {
+            authorDetails = (work['author_name'] as List)
+                .map((name) => {"name": name})
+                .toList();
+          }
+
+          // ✅ Add bookUrl here
+          String bookUrl = "https://openlibrary.org${work['key']}";
+
+          return {
+            ...work,
+            "author_details": authorDetails,
+            "bookUrl": bookUrl, // 👈 new field
+          };
+        }).toList());
       } else {
         books = [];
         debugPrint("❌ Failed to load books: ${response.statusCode}");
@@ -33,6 +72,8 @@ class LibraryProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+
 
 
   /// Fetch Book by Categories
@@ -118,6 +159,39 @@ class LibraryProvider extends ChangeNotifier {
     }
   }
 
+
+  /// Fetch a readable link for a book (if available)
+  Future<String?> fetchReadableLink(String workKey) async {
+    try {
+      final url =
+      Uri.parse("https://openlibrary.org$workKey/editions.json?limit=1");
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        if (data['entries'] != null && data['entries'].isNotEmpty) {
+          final edition = data['entries'][0];
+
+          // ✅ If edition has an Internet Archive ID → readable online
+          if (edition['ocaid'] != null) {
+            return "https://archive.org/stream/${edition['ocaid']}";
+          }
+
+          // ✅ Fallback: edition URL on OpenLibrary
+          if (edition['key'] != null) {
+            return "https://openlibrary.org${edition['key']}";
+          }
+        }
+      } else {
+        debugPrint("❌ Failed to load editions: ${response.statusCode}");
+      }
+    } catch (e) {
+      debugPrint("🔥 Error fetching readable link: $e");
+    }
+
+    return null; // no readable copy
+  }
 
 
 

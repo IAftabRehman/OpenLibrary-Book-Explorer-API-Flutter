@@ -74,6 +74,19 @@ class DrawerWidget extends StatelessWidget {
               ),
               ListTile(
                 leading: Icon(
+                  Icons.trending_up,
+                  color: themeProvider.primaryTextColor,
+                ),
+                title: MyText(
+                  text: "Trending Book",
+                  fontWeight: FontWeight.bold,
+                ),
+                onTap: (){
+                  Navigator.pushNamed(context, AppRoutes.trendingBook);
+                },
+              ),
+              ListTile(
+                leading: Icon(
                   Icons.category_outlined,
                   color: themeProvider.primaryTextColor,
                 ),

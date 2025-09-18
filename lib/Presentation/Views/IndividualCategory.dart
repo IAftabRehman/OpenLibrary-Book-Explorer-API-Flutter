@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomContainer.dart';
 import 'package:provider/provider.dart';
 
+import '../../Configuration/Routes.dart';
 import '../../Providers/LibraryProvider.dart';
 import '../../Providers/ChangeModeProvider.dart';
 import '../CommonWidgets/AppBarWidget.dart';
@@ -81,6 +82,9 @@ class _IndividualCategoryState extends State<IndividualCategory> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     child: MyContainer(
+                      onTap: (){
+                        Navigator.pushNamed(context, AppRoutes.bookRead, arguments: {"bookUrl": book["bookUrl"]});
+                      },
                       width: double.infinity,
                       color: themeProvider.buttonBackgroundColor,
                       borderRadius: BorderRadius.circular(10),

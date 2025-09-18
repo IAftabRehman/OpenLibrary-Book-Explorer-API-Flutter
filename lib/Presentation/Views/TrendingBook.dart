@@ -49,18 +49,18 @@ class _TrendingBookState extends State<TrendingBook> {
           children: [
             openSearch
                 ? MyTextField(
-              backgroundColor: Colors.transparent,
-              borderRadius: BorderRadius.circular(10),
-              textFieldBorder: Border.all(
-                width: 2,
-                color: themeProvider.primaryTextColor,
-              ),
-              hintText: "Search Author",
-              hintColor: themeProvider.primaryTextColor,
-              cursorColor: themeProvider.primaryTextColor,
-              textColor: themeProvider.primaryTextColor,
-              textSize: 16,
-            )
+                    backgroundColor: Colors.transparent,
+                    borderRadius: BorderRadius.circular(10),
+                    textFieldBorder: Border.all(
+                      width: 2,
+                      color: themeProvider.primaryTextColor,
+                    ),
+                    hintText: "Search Author",
+                    hintColor: themeProvider.primaryTextColor,
+                    cursorColor: themeProvider.primaryTextColor,
+                    textColor: themeProvider.primaryTextColor,
+                    textSize: 16,
+                  )
                 : SizedBox(),
 
             Expanded(
@@ -71,20 +71,17 @@ class _TrendingBookState extends State<TrendingBook> {
                 itemBuilder: (context, index) {
                   var book = libraryProvider.books[index];
 
+                  List<dynamic> authors = book['author_details'] ?? [];
+                  String authorNames = authors.isNotEmpty
+                      ? authors.map((a) => a['name'] ?? "Unknown Author").join(", ")
+                      : "Unknown Author";
+
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: MyContainer(
                       onTap: () async {
-
-                        Navigator.pushNamed(
-                          context,
-                          AppRoutes.home,
-                          arguments: {
-                            "bookDetails": book,
-                          },
-                        );
+                        Navigator.pushNamed(context, AppRoutes.bookRead, arguments: {"bookUrl": book["bookUrl"]});
                       },
-                      height: 90,
                       width: double.infinity,
                       color: themeProvider.buttonBackgroundColor,
                       borderRadius: BorderRadius.circular(10),
@@ -92,30 +89,27 @@ class _TrendingBookState extends State<TrendingBook> {
                         vertical: 10,
                         horizontal: 10,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // book title
-                          Expanded(
-                            child: MyText(
-                              text: book["title"] ?? "Unknown Book",
-                              size: 18,
-                              fontWeight: FontWeight.bold,
-                              color: themeProvider.primaryTextColor,
-                            ),
-                          ),
-
-                          // optional: show cover if available
-                          if (book["cover_i"] != null)
-                            Image.network(
-                              "https://covers.openlibrary.org/b/id/${book["cover_i"]}-M.jpg",
-                              height: 70,
-                              width: 50,
-                              fit: BoxFit.cover,
-                            )
-                          else
-                            const Icon(Icons.book, size: 50),
-                        ],
+                      child: ListTile(
+                        title: MyText(
+                          text: book['title'] ?? "Unknown Book",
+                          size: 18,
+                          fontWeight: FontWeight.bold,
+                          color: themeProvider.primaryTextColor,
+                        ),
+                        subtitle: MyText(
+                          text: authorNames,
+                          size: 16,
+                          fontWeight: FontWeight.w500,
+                          color: themeProvider.primaryTextColor.withOpacity(0.8),
+                        ),
+                        trailing: book["cover_i"] != null
+                            ? Image.network(
+                          "https://covers.openlibrary.org/b/id/${book["cover_i"]}-M.jpg",
+                          height: 70,
+                          width: 50,
+                          fit: BoxFit.cover,
+                        )
+                            : const Icon(Icons.book, size: 50),
                       ),
                     ),
                   );

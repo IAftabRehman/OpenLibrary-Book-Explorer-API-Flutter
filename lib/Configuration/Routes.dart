@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/AuthorDetails.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/AuthorsScreen.dart';
+import 'package:openlibrary_book_explorer/Presentation/Views/BookRead.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/CategoriesScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/ForgetPasswordScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/HelpScreen.dart';
@@ -26,6 +27,7 @@ class AppRoutes {
   static const String individualCategory = '/individualCategory';
   static const String authorDetails = '/authorDetails';
   static const String trendingBook = '/trendingBook';
+  static const String bookRead = '/bookRead';
   static const String help = '/help';
 
   static Map<String, WidgetBuilder> routes = {
@@ -58,6 +60,13 @@ class AppRoutes {
           builder: (_) => AuthorDetails(
             authorDetails: args["authorDetails"],
           ),
+        );
+      case AppRoutes.bookRead:
+        final args = settings.arguments as Map<String, dynamic>;
+        return CupertinoPageRoute(
+          builder: (_) => BookRead(
+            bookUrl: args["bookUrl"],
+            ),
         );
 
       default:
