@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:openlibrary_book_explorer/Providers/ChangeModeProvider.dart';
 import 'package:provider/provider.dart';
-
 import '../../Configuration/Routes.dart';
 import '../Elements/CustomContainer.dart';
 import '../Elements/CustomText.dart';

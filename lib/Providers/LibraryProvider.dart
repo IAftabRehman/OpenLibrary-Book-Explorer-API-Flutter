@@ -52,8 +52,11 @@ class LibraryProvider extends ChangeNotifier {
           }
 
           // ✅ Add bookUrl here
-          String bookUrl = "https://openlibrary.org${work['key']}";
 
+          String? bookUrl;
+          if (work['availability'] != null && work['availability']['status'] == 'open') {
+            bookUrl = "https://archive.org/stream/${work['availability']['ia']}?ui=embed";
+          }
           return {
             ...work,
             "author_details": authorDetails,
