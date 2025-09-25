@@ -5,6 +5,7 @@ import 'package:openlibrary_book_explorer/Providers/LibraryProvider.dart';
 import 'package:openlibrary_book_explorer/Providers/ChangeModeProvider.dart';
 import 'package:provider/provider.dart';
 import 'Configuration/Routes.dart';
+import 'Providers/authProvider.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -24,11 +25,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
         ChangeNotifierProvider(create: (_) => LibraryProvider()),
+        ChangeNotifierProvider(create: (_) => AutheProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "OpenLibrary Book Explorer",
-        initialRoute: AppRoutes.home,
+        initialRoute: AppRoutes.splash,
         routes: AppRoutes.routes,
         onGenerateRoute: AppRoutes.onGenerateRoute,
         // home: HomeScreen(),

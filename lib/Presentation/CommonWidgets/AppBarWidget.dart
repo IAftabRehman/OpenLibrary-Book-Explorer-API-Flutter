@@ -4,13 +4,22 @@ import '../../Providers/ChangeModeProvider.dart';
 import '../Elements/CustomContainer.dart';
 import '../Elements/CustomText.dart';
 
+/// ✅ Custom AppBar Widget
 class AppBarWidget extends StatefulWidget implements PreferredSizeWidget {
   final String titleText;
   final bool searchIcon;
-  const AppBarWidget({super.key, required this.titleText, required this.searchIcon});
+  final ValueChanged<bool>? onSearchToggle;
+
+  const AppBarWidget({
+    super.key,
+    required this.titleText,
+    required this.searchIcon,
+    this.onSearchToggle,
+  });
 
   @override
   State<AppBarWidget> createState() => _AppBarWidgetState();
+
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
@@ -43,7 +52,8 @@ class _AppBarWidgetState extends State<AppBarWidget> {
       ),
       centerTitle: true,
       actions: [
-        widget.searchIcon ? MyIconContainer(
+        widget.searchIcon
+            ? MyIconContainer(
           icon: openSearch ? Icons.close : Icons.search,
           iconColor: themeProvider.primaryTextColor,
           iconSize: 30,
@@ -51,8 +61,10 @@ class _AppBarWidgetState extends State<AppBarWidget> {
             setState(() {
               openSearch = !openSearch;
             });
+            widget.onSearchToggle?.call(openSearch); // 👈 notify parent
           },
-        ) : SizedBox(),
+        )
+            : const SizedBox(),
       ],
     );
   }

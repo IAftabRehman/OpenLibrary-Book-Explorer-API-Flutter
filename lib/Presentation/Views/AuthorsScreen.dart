@@ -19,6 +19,7 @@ class AuthorsScreen extends StatefulWidget {
 class _AuthorsScreenState extends State<AuthorsScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool openSearch = false;
+  String searchQuery = "";
 
   @override
   void initState() {
@@ -32,100 +33,132 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final libraryProvider = Provider.of<LibraryProvider>(context);
+
+    // 🔍 Filter authors by search
+    final filteredAuthors = libraryProvider.authors.where((author) {
+      final name = (author["name"] ?? "").toLowerCase();
+      return name.contains(searchQuery.toLowerCase());
+    }).toList();
+
     return Scaffold(
       key: _scaffoldKey,
       extendBodyBehindAppBar: false,
       backgroundColor: Colors.transparent,
-      appBar: AppBarWidget(titleText: "Authors", searchIcon: true),
-      drawer: DrawerWidget(),
+      appBar: AppBarWidget(
+        titleText: "Authors",
+        searchIcon: true,
+        onSearchToggle: (isOpen) {
+          setState(() {
+            openSearch = isOpen;
+            if (!isOpen) searchQuery = ""; // reset filter
+          });
+        },
+      ),
+      drawer: const DrawerWidget(),
       body: SafeArea(
         child: MyContainer(
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(gradient: themeProvider.backgroundColor),
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              openSearch
-                  ? MyTextField(
-                      backgroundColor: Colors.transparent,
-                      borderRadius: BorderRadius.circular(10),
-                      textFieldBorder: Border.all(
-                        width: 2,
-                        color: themeProvider.primaryTextColor,
-                      ),
-                      hintText: "Search Author",
-                      hintColor: themeProvider.primaryTextColor,
-                      cursorColor: themeProvider.primaryTextColor,
-                      textColor: themeProvider.primaryTextColor,
-                      textSize: 16,
-                    )
-                  : SizedBox(),
+              if (openSearch)
+                MyTextField(
+                  onChanged: (value) {
+                    setState(() {
+                      searchQuery = value;
+                    });
+                  },
+                  backgroundColor: Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                  textFieldBorder: Border.all(
+                    width: 2,
+                    color: themeProvider.primaryTextColor,
+                  ),
+                  hintText: "Search Author...",
+                  hintColor: themeProvider.primaryTextColor,
+                  cursorColor: themeProvider.primaryTextColor,
+                  textColor: themeProvider.primaryTextColor,
+                  textSize: 16,
+                ),
+
+              const SizedBox(height: 10),
 
               Expanded(
                 child: libraryProvider.isLoading
-                    ? const Center(child: CircularProgressIndicator())
+                    ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Center(child: CircularProgressIndicator()),
+                    const SizedBox(height: 20),
+                    MyText(
+                      text:
+                      "⏳ Please wait, fetching all authors may take some time...",
+                      color: themeProvider.primaryTextColor,
+                    ),
+                  ],
+                )
                     : ListView.builder(
-                        itemCount: libraryProvider.authors.length,
-                        itemBuilder: (context, index) {
-                          var author = libraryProvider.authors[index];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: MyContainer(
-                              onTap: () async {
-                                String authorKey = author['key'] ?? "";
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: filteredAuthors.length,
+                  itemBuilder: (context, index) {
+                    var author = filteredAuthors[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: MyContainer(
+                        onTap: () async {
+                          String authorKey = author['key'] ?? "";
+                          if (!authorKey.startsWith("/authors/")) {
+                            authorKey = "/authors/$authorKey";
+                          }
 
-                                // make sure it always starts with "/authors/"
-                                if (!authorKey.startsWith("/authors/")) {
-                                  authorKey = "/authors/$authorKey";
-                                }
+                          final details = await libraryProvider
+                              .fetchAuthorDetails(authorKey);
 
-                                final details = await libraryProvider.fetchAuthorDetails(authorKey);
-
-                                if (context.mounted) { // ✅ to avoid "deactivated widget" error
-                                  Navigator.pushNamed(
-                                    context,
-                                    AppRoutes.authorDetails,
-                                    arguments: {
-                                      "authorDetails": details,
-                                    },
-                                  );
-                                }
+                          if (context.mounted) {
+                            Navigator.pushNamed(
+                              context,
+                              AppRoutes.authorDetails,
+                              arguments: {
+                                "authorDetails": details ?? {},
                               },
-
-                              height: 70,
-                              width: double.infinity,
-                              color: themeProvider.buttonBackgroundColor,
-                              borderRadius: BorderRadius.circular(10),
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 10,
-                                horizontal: 10,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: MyText(
-                                      text: author["name"] ?? "Unknown Author",
-                                      size: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: themeProvider.primaryTextColor,
-                                    ),
-                                  ),
-                                  Image.asset(
-                                    'assets/icons/author.png',
-                                    height: 50,
-                                    width: 50,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ],
+                            );
+                          }
+                        },
+                        height: 70,
+                        width: double.infinity,
+                        color: themeProvider.buttonBackgroundColor,
+                        borderRadius: BorderRadius.circular(10),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 10,
+                        ),
+                        child: Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: MyText(
+                                text: author["name"] ?? "Unknown Author",
+                                size: 18,
+                                fontWeight: FontWeight.bold,
+                                color: themeProvider.primaryTextColor,
                               ),
                             ),
-                          );
-                        },
+                            Image.asset(
+                              'assets/icons/author.png',
+                              height: 45,
+                              width: 45,
+                              fit: BoxFit.cover,
+                            ),
+                          ],
+                        ),
                       ),
+                    );
+                  },
+                ),
               ),
             ],
           ),

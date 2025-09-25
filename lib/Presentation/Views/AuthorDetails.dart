@@ -8,17 +8,21 @@ class AuthorDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(authorDetails["name"] ?? "Author Details")),
-      body: Padding(
+      appBar: AppBar(
+        title: Text(authorDetails["name"] ?? "Author Details"),
+      ),
+      body: authorDetails.isEmpty
+          ? const Center(child: Text("No details available"))
+          : Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Name: ${authorDetails["name"] ?? "Unknown"}"),
-            const SizedBox(height: 10),
             Text("Birth Date: ${authorDetails["birth_date"] ?? "N/A"}"),
-            const SizedBox(height: 10),
-            Text("Bio: ${authorDetails["bio"] is String ? authorDetails["bio"] : authorDetails["bio"]?["value"] ?? "N/A"}"),
+            Text(
+              "Bio: ${authorDetails["bio"] is String ? authorDetails["bio"] : authorDetails["bio"]?["value"] ?? "N/A"}",
+            ),
           ],
         ),
       ),

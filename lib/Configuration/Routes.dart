@@ -3,6 +3,7 @@ import 'package:openlibrary_book_explorer/Presentation/Views/AuthorDetails.dart'
 import 'package:openlibrary_book_explorer/Presentation/Views/AuthorsScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/BookRead.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/CategoriesScreen.dart';
+import 'package:openlibrary_book_explorer/Presentation/Views/FavoriteScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/ForgetPasswordScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/HelpScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/IndividualCategory.dart';
@@ -28,6 +29,7 @@ class AppRoutes {
   static const String authorDetails = '/authorDetails';
   static const String trendingBook = '/trendingBook';
   static const String bookRead = '/bookRead';
+  static const String favorite = '/favorite';
   static const String help = '/help';
 
   static Map<String, WidgetBuilder> routes = {
@@ -41,6 +43,7 @@ class AppRoutes {
     authors: (context) => AuthorsScreen(),
     profile: (context) => ProfileScreen(),
     trendingBook: (context) => TrendingBook(),
+    favorite: (context) => FavoriteScreen(),
     help: (context) => HelpScreen(),
   };
 
@@ -54,23 +57,27 @@ class AppRoutes {
             categoryLink: args["link"],
           ),
         );
+
       case AppRoutes.authorDetails:
         final args = settings.arguments as Map<String, dynamic>;
+        final details = args["authorDetails"];
         return CupertinoPageRoute(
           builder: (_) => AuthorDetails(
-            authorDetails: args["authorDetails"],
+            authorDetails: details ?? {}, // ✅ fallback
           ),
         );
+
       case AppRoutes.bookRead:
         final args = settings.arguments as Map<String, dynamic>;
         return CupertinoPageRoute(
           builder: (_) => BookRead(
-            bookUrl: args["bookUrl"],
-            ),
+            ocaid: args["ocaid"],
+          ),
         );
 
       default:
         return null;
     }
   }
+
 }

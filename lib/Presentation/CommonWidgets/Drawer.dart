@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:openlibrary_book_explorer/Providers/ChangeModeProvider.dart';
 import 'package:provider/provider.dart';
 import '../../Configuration/Routes.dart';
+import '../../Providers/authProvider.dart';
 import '../Elements/CustomContainer.dart';
 import '../Elements/CustomText.dart';
 
@@ -11,6 +12,8 @@ class DrawerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final authProvider = Provider.of<AutheProvider>(context);
+
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.6,
       child: Drawer(
@@ -27,20 +30,22 @@ class DrawerWidget extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: AssetImage('assets/images/background.jpg'),
+                          image: authProvider.isLoggedIn
+                              ? AssetImage(authProvider.profilePic)
+                              : AssetImage("assets/images/default_user.png"),
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
                     const Spacer(),
                     MyText(
-                      text: "Aftab Ur Rehman",
+                      text: authProvider.name,
                       size: 16,
                       fontWeight: FontWeight.bold,
                       color: themeProvider.primaryTextColor,
                     ),
                     MyText(
-                      text: "iamaftabrehman@gmail.com",
+                      text: authProvider.email,
                       size: 12,
                       color: themeProvider.primaryTextColor,
                     ),
@@ -48,6 +53,7 @@ class DrawerWidget extends StatelessWidget {
                 ),
               ),
 
+              /// My Library
               ListTile(
                 leading: Icon(
                   Icons.library_books_outlined,
@@ -58,6 +64,8 @@ class DrawerWidget extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+
+              /// Home
               ListTile(
                 leading: Icon(
                   Icons.home_outlined,
@@ -67,10 +75,12 @@ class DrawerWidget extends StatelessWidget {
                   text: "Home",
                   fontWeight: FontWeight.bold,
                 ),
-                onTap: (){
+                onTap: () {
                   Navigator.pushNamed(context, AppRoutes.home);
                 },
               ),
+
+              /// Trending Book
               ListTile(
                 leading: Icon(
                   Icons.trending_up,
@@ -80,10 +90,12 @@ class DrawerWidget extends StatelessWidget {
                   text: "Trending Book",
                   fontWeight: FontWeight.bold,
                 ),
-                onTap: (){
+                onTap: () {
                   Navigator.pushNamed(context, AppRoutes.trendingBook);
                 },
               ),
+
+              /// Categories
               ListTile(
                 leading: Icon(
                   Icons.category_outlined,
@@ -98,6 +110,7 @@ class DrawerWidget extends StatelessWidget {
                 },
               ),
 
+              /// Authors
               ListTile(
                 leading: Icon(
                   Icons.person_outlined,
@@ -108,13 +121,24 @@ class DrawerWidget extends StatelessWidget {
                   Navigator.pushNamed(context, AppRoutes.authors);
                 },
               ),
+
+              /// Favorite (Login Check)
               ListTile(
                 leading: Icon(
                   Icons.favorite_outline,
                   color: themeProvider.primaryTextColor,
                 ),
                 title: MyText(text: "Favorite", fontWeight: FontWeight.bold),
+                onTap: () {
+                  if (authProvider.isLoggedIn) {
+                    Navigator.pushNamed(context, AppRoutes.favorite);
+                  } else {
+                    Navigator.pushNamed(context, AppRoutes.login);
+                  }
+                },
               ),
+
+              /// Theme Mode
               ListTile(
                 leading: Icon(
                   themeProvider.isNightMode
@@ -123,9 +147,7 @@ class DrawerWidget extends StatelessWidget {
                   color: themeProvider.primaryTextColor,
                 ),
                 title: MyText(
-                  text: themeProvider.isNightMode
-                      ? "Dark Mode"
-                      : "Light Mode",
+                  text: themeProvider.isNightMode ? "Dark Mode" : "Light Mode",
                   color: themeProvider.primaryTextColor,
                   fontWeight: FontWeight.bold,
                 ),
@@ -133,22 +155,42 @@ class DrawerWidget extends StatelessWidget {
                   themeProvider.toggleTheme();
                 },
               ),
+
+              /// Help
               ListTile(
                 leading: Icon(
                   Icons.question_mark_outlined,
                   color: themeProvider.primaryTextColor,
                 ),
                 title: MyText(text: "Help", fontWeight: FontWeight.bold),
-                onTap: (){
+                onTap: () {
                   Navigator.pushNamed(context, AppRoutes.help);
                 },
               ),
-              ListTile(
+
+              /// Login / Logout
+              authProvider.isLoggedIn
+                  ? ListTile(
                 leading: Icon(
                   Icons.logout,
                   color: themeProvider.primaryTextColor,
                 ),
                 title: MyText(text: "LogOut", fontWeight: FontWeight.bold),
+                onTap: () {
+                  authProvider.logout();
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, AppRoutes.login, (route) => false);
+                },
+              )
+                  : ListTile(
+                leading: Icon(
+                  Icons.login,
+                  color: themeProvider.primaryTextColor,
+                ),
+                title: MyText(text: "Login", fontWeight: FontWeight.bold),
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.login);
+                },
               ),
             ],
           ),

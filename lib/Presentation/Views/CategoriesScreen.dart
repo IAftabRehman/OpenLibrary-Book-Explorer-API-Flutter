@@ -19,10 +19,16 @@ class CategoriesScreen extends StatefulWidget {
 class _CategoriesScreenState extends State<CategoriesScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool openSearch = false;
+  String searchQuery = "";
+
+
   List<CategoriesModel> categoriesModel = [
     CategoriesModel(name: "Architecture", link: "architecture"),
     CategoriesModel(name: "Art Instruction", link: "art__art_instruction"),
-    CategoriesModel(name: "Art History", link: "history_of_art__art__design_styles"),
+    CategoriesModel(
+      name: "Art History",
+      link: "history_of_art__art__design_styles",
+    ),
     CategoriesModel(name: "Dance", link: "dance"),
     CategoriesModel(name: "Design", link: "design"),
     CategoriesModel(name: "Fashion", link: "fashion"),
@@ -43,7 +49,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     CategoriesModel(name: "Humor", link: "humor"),
     CategoriesModel(name: "Literature", link: "literature"),
     CategoriesModel(name: "Magic", link: "magic"),
-    CategoriesModel(name: "Mystery and Detective Stories", link: "mystery_and_detective_stories"),
+    CategoriesModel(
+      name: "Mystery and Detective Stories",
+      link: "mystery_and_detective_stories",
+    ),
     CategoriesModel(name: "Plays", link: "plays"),
     CategoriesModel(name: "Poetry", link: "poetry"),
     CategoriesModel(name: "Romance", link: "romance"),
@@ -79,18 +88,28 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     CategoriesModel(name: "Psychology", link: "psychology"),
   ];
 
-
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-
-    return SafeArea(
+    List<CategoriesModel> filteredCategories = categoriesModel
+        .where((cat) =>
+        cat.name.toLowerCase().contains(searchQuery.toLowerCase()))
+        .toList();
+    return  SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
-        extendBodyBehindAppBar: false,
         backgroundColor: Colors.transparent,
-        appBar: AppBarWidget(titleText: "Book Categories", searchIcon: true),
-        drawer: DrawerWidget(),
+        appBar: AppBarWidget(
+          titleText: "Book Categories",
+          searchIcon: true,
+          onSearchToggle: (isOpen) {
+            setState(() {
+              openSearch = isOpen;
+              if (!isOpen) searchQuery = ""; // reset filter when closed
+            });
+          },
+        ),
+        drawer: const DrawerWidget(),
         body: MyContainer(
           width: double.infinity,
           height: double.infinity,
@@ -101,13 +120,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             children: [
               if (openSearch)
                 MyTextField(
+                  onChanged: (value) {
+                    setState(() {
+                      searchQuery = value;
+                    });
+                  },
                   backgroundColor: Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                   textFieldBorder: Border.all(
                     width: 2,
                     color: themeProvider.primaryTextColor,
                   ),
-                  hintText: "Search Author",
+                  hintText: "Search Categories...",
                   hintColor: themeProvider.primaryTextColor,
                   cursorColor: themeProvider.primaryTextColor,
                   textColor: themeProvider.primaryTextColor,
@@ -118,7 +142,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
               Expanded(
                 child: ListView.builder(
-                  itemCount: categoriesModel.length,
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: filteredCategories.length,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -128,23 +153,21 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             context,
                             AppRoutes.individualCategory,
                             arguments: {
-                              "name": categoriesModel[index].name,
-                              "link": categoriesModel[index].link,
+                              "name": filteredCategories[index].name,
+                              "link": filteredCategories[index].link,
                             },
                           );
                         },
-                        height: 70,
+                        height: 60,
                         width: double.infinity,
                         color: themeProvider.buttonBackgroundColor,
                         borderRadius: BorderRadius.circular(10),
-                        padding: EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 10,
-                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 15),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: MyText(
-                            text: categoriesModel[index].name,
+                            text: filteredCategories[index].name,
                             size: 18,
                             fontWeight: FontWeight.bold,
                             color: themeProvider.primaryTextColor,

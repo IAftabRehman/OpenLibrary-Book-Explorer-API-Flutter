@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:openlibrary_book_explorer/Presentation/CommonWidgets/Drawer.dart';
+import 'package:openlibrary_book_explorer/Presentation/Elements/CustomImageView.dart';
 import 'package:openlibrary_book_explorer/Providers/ChangeModeProvider.dart';
 import 'package:openlibrary_book_explorer/Configuration/Routes.dart';
 import 'package:openlibrary_book_explorer/Models/AuthorsModel.dart';
@@ -8,6 +9,7 @@ import 'package:openlibrary_book_explorer/Presentation/Elements/CustomContainer.
 import 'package:provider/provider.dart';
 
 import '../../Models/FavouriteBookModel.dart';
+import '../../Providers/LibraryProvider.dart';
 import '../Elements/CustomText.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,7 +25,10 @@ class _HomeScreenState extends State<HomeScreen> {
   List<CategoriesModel> categoriesModel = [
     CategoriesModel(name: "Architecture", link: "architecture"),
     CategoriesModel(name: "Art Instruction", link: "art__art_instruction"),
-    CategoriesModel(name: "Art History", link: "history_of_art__art__design_styles"),
+    CategoriesModel(
+      name: "Art History",
+      link: "history_of_art__art__design_styles",
+    ),
     CategoriesModel(name: "Dance", link: "dance"),
     CategoriesModel(name: "Design", link: "design"),
     CategoriesModel(name: "Fashion", link: "fashion"),
@@ -44,7 +49,10 @@ class _HomeScreenState extends State<HomeScreen> {
     CategoriesModel(name: "Humor", link: "humor"),
     CategoriesModel(name: "Literature", link: "literature"),
     CategoriesModel(name: "Magic", link: "magic"),
-    CategoriesModel(name: "Mystery and Detective Stories", link: "mystery_and_detective_stories"),
+    CategoriesModel(
+      name: "Mystery and Detective Stories",
+      link: "mystery_and_detective_stories",
+    ),
     CategoriesModel(name: "Plays", link: "plays"),
     CategoriesModel(name: "Poetry", link: "poetry"),
     CategoriesModel(name: "Romance", link: "romance"),
@@ -103,6 +111,17 @@ class _HomeScreenState extends State<HomeScreen> {
     AuthorsModel(name: "Christian d' Elvert"),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      Provider.of<LibraryProvider>(
+        context,
+        listen: false,
+      ).fetchTrendingBookForHome();
+    });
+  }
+
   List<FavouriteBookModel> favouriteBookModel = [
     FavouriteBookModel(name: "Fiction"),
     FavouriteBookModel(name: "Non-Fiction"),
@@ -116,6 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    // final libraryProvider = Provider.of<LibraryProvider>(context);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -160,14 +180,124 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   const SizedBox(height: 40),
 
-                  listViewContainer(
-                    context,
-                    themeProvider,
-                    "Trending Book",
-                        () {
-                      Navigator.pushNamed(context, AppRoutes.trendingBook);
+                  Consumer<LibraryProvider>(
+                    builder: (context, libraryProvider, _) {
+                      if (libraryProvider.isLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // 🔹 Header
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                MyText(
+                                  text: "Trending Books",
+                                  size: 18,
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                MyText(
+                                  text: "See All",
+                                  color: Colors.green,
+                                  decoration: TextDecoration.underline,
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      AppRoutes.trendingBook,
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          MyContainer(
+                            height: 110,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: libraryProvider.trendingBooks.length,
+                              itemBuilder: (context, index) {
+                                var book = libraryProvider.trendingBooks[index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    if (book["ocaid"] != null) {
+                                      Navigator.pushNamed(
+                                        context,
+                                        AppRoutes.bookRead,
+                                        arguments: {"ocaid": book["ocaid"]},
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text("No PDF available"),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: Expanded(
+                                    child: MyContainer(
+                                      width: 120,
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            themeProvider.buttonBackgroundColor,
+                                        borderRadius: BorderRadius.circular(12),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.1),
+                                            blurRadius: 4,
+                                            offset: const Offset(2, 3),
+                                          ),
+                                        ],
+                                      ),
+                                      padding: const EdgeInsets.all(6),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          // 📕 Small Book Cover
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            child: MyContainer(
+                                              height: 50,
+                                              width: double.infinity,
+                                              color: Colors.black54,
+                                              child: CommonImageView(imagePath: themeProvider.isNightMode ? 'assets/icons/darkModeBook.png' : 'assets/icons/lightModeBook.png', fit: BoxFit.contain,)
+                                            ),
+                                          ),
+                                          const SizedBox(height: 6),
+                                    
+                                          // 📝 Smaller Title
+                                          MyText(
+                                            text: book['title'] ?? "Unknown",
+                                            size: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: themeProvider.primaryTextColor,
+                                            maxLines: 2,
+                                            textOverflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      );
                     },
-                    categoriesModel,
                   ),
 
                   const SizedBox(height: 50),
@@ -219,7 +349,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                MyText(text: titleName, size: 18, color: Colors.white70),
+                MyText(text: titleName, size: 18, color: Colors.white70, fontWeight: FontWeight.bold),
                 MyText(
                   text: "See All",
                   color: Colors.green,
@@ -239,11 +369,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: MyContainer(
-                    onTap: (){
-                      titleName == "Book Categoires" ? Navigator.pushNamed(context, AppRoutes.individualCategory, arguments: {
-                      "name": categoriesModel[index].name,
-                      "link": categoriesModel[index].link,
-                      }) : Navigator.pushNamed(context, AppRoutes.authors);
+                    onTap: () {
+                      titleName == "Book Categoires"
+                          ? Navigator.pushNamed(
+                              context,
+                              AppRoutes.individualCategory,
+                              arguments: {
+                                "name": categoriesModel[index].name,
+                                "link": categoriesModel[index].link,
+                              },
+                            )
+                          : Navigator.pushNamed(context, AppRoutes.authors);
                     },
                     decoration: BoxDecoration(
                       gradient: themeProvider.backgroundColor,

@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:openlibrary_book_explorer/Presentation/CommonWidgets/AppBarWidget.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class BookRead extends StatelessWidget {
-  final String bookUrl;
+  final String ocaid;
 
-  const BookRead({super.key, required this.bookUrl});
+  const BookRead({super.key, required this.ocaid});
 
   @override
   Widget build(BuildContext context) {
+    final pdfUrl = "https://archive.org/download/$ocaid/$ocaid.pdf";
     return Scaffold(
-      appBar: AppBar(title: const Text("Read Book")),
-      body: WebViewWidget(
-        controller: WebViewController()
-          ..setJavaScriptMode(JavaScriptMode.unrestricted)
-          ..loadRequest(Uri.parse(bookUrl)),
-      ),
+      appBar: AppBarWidget(titleText: "Book Read", searchIcon: false),
+      body: SfPdfViewer.network(pdfUrl),
     );
   }
 }

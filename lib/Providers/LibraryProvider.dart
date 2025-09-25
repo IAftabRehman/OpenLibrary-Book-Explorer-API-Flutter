@@ -4,9 +4,28 @@ import 'package:http/http.dart' as http;
 
 class LibraryProvider extends ChangeNotifier {
   bool isLoading = false;
+  List<dynamic> trendingBooks = [];
   List<dynamic> books = [];
   List authors = [];
   List selectedAuthor = [];
+
+  Future<void> fetchTrendingBookForHome() async {
+    isLoading = true;
+    notifyListeners();
+
+    // Example OpenLibrary API call
+    final response = await http.get(
+      Uri.parse("https://openlibrary.org/trending/daily.json?limit=10"),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      trendingBooks = data["works"] ?? [];
+    }
+
+    isLoading = false;
+    notifyListeners();
+  }
 
   /// Fetch Trending Books + Author Details
   Future<void> fetchTrendingBooks() async {
@@ -14,53 +33,23 @@ class LibraryProvider extends ChangeNotifier {
       isLoading = true;
       notifyListeners();
 
-      final url = Uri.parse("https://openlibrary.org/trending/now.json?limit=10");
+      final url = Uri.parse("https://openlibrary.org/trending/now.json?limit=20");
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-
         final works = (data['works'] as List?) ?? [];
 
-        // Enrich each work with author details
-        books = await Future.wait(works.map((work) async {
-          final authors = work['author_key'] as List?;
-          List<Map<String, dynamic>> authorDetails = [];
-
-          if (authors != null) {
-            for (final key in authors) {
-              try {
-                final authorUrl =
-                Uri.parse("https://openlibrary.org/authors/$key.json");
-                final authorResponse = await http.get(authorUrl);
-
-                if (authorResponse.statusCode == 200) {
-                  final authorData = json.decode(authorResponse.body);
-                  authorDetails.add(authorData);
-                }
-              } catch (e) {
-                debugPrint("🔥 Error fetching author $key: $e");
-              }
-            }
-          }
-
-          // ✅ fallback to basic names if details missing
-          if (authorDetails.isEmpty && work['author_name'] != null) {
-            authorDetails = (work['author_name'] as List)
-                .map((name) => {"name": name})
-                .toList();
-          }
-
-          String? bookUrl;
-          if (work['availability'] != null && work['availability']['status'] == 'open') {
-            bookUrl = "https://archive.org/stream/${work['availability']['ia']}?ui=embed";
-          }
+        books = works.map<Map<String, dynamic>>((work) {
           return {
-            ...work,
-            "author_details": authorDetails,
-            "bookUrl": bookUrl, // 👈 new field
+            "title": work["title"] ?? "Unknown Title",
+            "coverId": work["cover_i"],
+            "ocaid": work["ia"] != null && work["ia"].isNotEmpty ? work["ia"][0] : null, // extract archive ID
+            "author": (work["author_name"] != null && work["author_name"].isNotEmpty)
+                ? work["author_name"][0]
+                : "Unknown Author",
           };
-        }).toList());
+        }).toList();
       } else {
         books = [];
         debugPrint("❌ Failed to load books: ${response.statusCode}");
@@ -91,7 +80,15 @@ class LibraryProvider extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        books = data['works'] ?? [];
+
+        books = (data['works'] as List)
+            .map((book) => {
+          "title": book["title"],
+          "authors": book["authors"],
+          "coverId": book["cover_id"], // ✅ cover_id for book images
+          "key": book["key"], // unique identifier
+        })
+            .toList();
       } else {
         books = [];
         debugPrint("Failed to load books: ${response.statusCode}");
@@ -100,10 +97,11 @@ class LibraryProvider extends ChangeNotifier {
       books = [];
       debugPrint("Error fetching books: $e");
     } finally {
-      isLoading = false; // ✅ stop loading here always
+      isLoading = false;
       notifyListeners();
     }
   }
+
 
   /// Fetch Authors Name by characters
   Future<void> fetchAllAuthors() async {

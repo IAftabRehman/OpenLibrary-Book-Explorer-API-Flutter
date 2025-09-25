@@ -4,6 +4,7 @@ import 'package:openlibrary_book_explorer/Configuration/Routes.dart';
 import 'package:openlibrary_book_explorer/Presentation/CommonWidgets/AuthenticationTextField.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomBottom.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomText.dart';
+import 'package:openlibrary_book_explorer/Providers/authProvider.dart';
 import 'package:provider/provider.dart';
 import '../../Providers/AuthenticationProvider.dart';
 import '../Elements/CustomContainer.dart';
@@ -25,6 +26,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final authProvider = Provider.of<AutheProvider>(context);
     return Scaffold(
       body: MyContainer(
         height: double.infinity,
@@ -111,19 +113,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   return provider.isLoading
                       ? const CircularProgressIndicator()
                       : MyButton(
-                    btnLabel: "Sign Up",
-                    paddingLeft: 70,
-                    paddingRight: 70,
-                    onPressed: () {
-                      provider.signUp(
-                        nameController.text.trim(),
-                        int.tryParse(ageController.text.trim()) ?? 0,
-                        numberController.text.trim(),
-                        emailController.text.trim(),
-                        passwordController.text.trim(),
-                      );
-                    },
-                  );
+                          btnLabel: "Sign Up",
+                          paddingLeft: 70,
+                          paddingRight: 70,
+                          onPressed: () {
+                            provider.signUp(
+                              nameController.text.trim(),
+                              int.tryParse(ageController.text.trim()) ?? 0,
+                              numberController.text.trim(),
+                              emailController.text.trim(),
+                              passwordController.text.trim(),
+                            );
+                          },
+                        );
                 },
               ),
 
@@ -140,7 +142,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   textAlign: TextAlign.right,
                   decoration: TextDecoration.underline,
                   onTap: () {
-                    Navigator.pushNamed(context, AppRoutes.login);
+                    if (authProvider.isLoggedIn) {
+                      // ✅ Navigation after successful signup
+                      Navigator.pushReplacementNamed(context, AppRoutes.home);
+                    } else {
+                      // ❌ Show error if signup failed
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Sign Up failed, please try again"),
+                        ),
+                      );
+                    }
                   },
                 ),
               ),
