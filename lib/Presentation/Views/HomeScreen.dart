@@ -319,12 +319,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   }, authorsModel),
 
                   const SizedBox(height: 50),
-
-                  listViewContainer(context, themeProvider, "Book Authors", () {
-                    Navigator.pushNamed(context, AppRoutes.authors);
-                  }, favouriteBookModel),
-
-                  const SizedBox(height: 50),
                 ],
               ),
             ),

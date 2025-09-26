@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,6 +30,10 @@ class LibraryProvider extends ChangeNotifier {
   }
 
   /// Fetch Trending Books + Author Details
+  // add imports if not present
+// import 'dart:convert';
+// import 'package:http/http.dart' as http;
+
   Future<void> fetchTrendingBooks() async {
     try {
       isLoading = true;
@@ -41,10 +47,23 @@ class LibraryProvider extends ChangeNotifier {
         final works = (data['works'] as List?) ?? [];
 
         books = works.map<Map<String, dynamic>>((work) {
+
+          final workKey = work['key'];
+          final ocaid = (work['ia'] != null && work['ia'].isNotEmpty) ? work['ia'][0] : null;
+          final coverId = work['cover_i'];
+          final String id = (workKey ?? ocaid ?? coverId?.toString() ?? work['title']).toString();
+
+          final String? coverUrl = coverId != null
+              ? "https://covers.openlibrary.org/b/id/$coverId-M.jpg"
+              : null;
+
           return {
+            "id": id,
+            "key": workKey,
             "title": work["title"] ?? "Unknown Title",
-            "coverId": work["cover_i"],
-            "ocaid": work["ia"] != null && work["ia"].isNotEmpty ? work["ia"][0] : null, // extract archive ID
+            "coverId": coverId,
+            "coverUrl": coverUrl,
+            "ocaid": ocaid,
             "author": (work["author_name"] != null && work["author_name"].isNotEmpty)
                 ? work["author_name"][0]
                 : "Unknown Author",
@@ -62,6 +81,7 @@ class LibraryProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
 
 
 
@@ -192,6 +212,24 @@ class LibraryProvider extends ChangeNotifier {
     return null; // no readable copy
   }
 
+
+  Future<void> addToFavorites(Map<String, dynamic> book) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final docRef = FirebaseFirestore.instance
+        .collection("users")
+        .doc(user.uid)
+        .collection("favorites")
+        .doc(book["id"]);
+
+    await docRef.set({
+      "title": book["title"],
+      "author": book["author"],
+      "coverUrl": book["coverUrl"],
+      "timestamp": FieldValue.serverTimestamp(),
+    });
+  }
 
 
 }

@@ -33,13 +33,15 @@ class RegistrationModel {
     password: json["password"],
   );
 
-  Map<String, dynamic> toJson() => {
-    "docId": docId,
-    "createdAt": createdAt,
-    "name": name,
-    "age": age,
-    "phoneNumber": phoneNumber,
-    "email": email,
-    "password": password,
-  };
+  Map<String, dynamic> toJson() {
+    return {
+      "docId": docId,
+      "createdAt": createdAt,
+      "name": name,
+      "age": age,
+      "phoneNumber": phoneNumber,
+      "email": email,
+      // "password": password, ❌ don’t save password in Firestore
+    };
+  }
 }

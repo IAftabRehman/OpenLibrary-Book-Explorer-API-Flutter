@@ -4,9 +4,8 @@ import 'package:openlibrary_book_explorer/Configuration/Routes.dart';
 import 'package:openlibrary_book_explorer/Presentation/CommonWidgets/AuthenticationTextField.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomBottom.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomText.dart';
-import 'package:openlibrary_book_explorer/Providers/authProvider.dart';
+import 'package:openlibrary_book_explorer/Providers/AuthenticationProvider.dart';
 import 'package:provider/provider.dart';
-import '../../Providers/AuthenticationProvider.dart';
 import '../Elements/CustomContainer.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -26,7 +25,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final authProvider = Provider.of<AutheProvider>(context);
+    final authProvider = Provider.of<AuthenticationProvider>(context);
     return Scaffold(
       body: MyContainer(
         height: double.infinity,
@@ -113,19 +112,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   return provider.isLoading
                       ? const CircularProgressIndicator()
                       : MyButton(
-                          btnLabel: "Sign Up",
-                          paddingLeft: 70,
-                          paddingRight: 70,
-                          onPressed: () {
-                            provider.signUp(
-                              nameController.text.trim(),
-                              int.tryParse(ageController.text.trim()) ?? 0,
-                              numberController.text.trim(),
-                              emailController.text.trim(),
-                              passwordController.text.trim(),
-                            );
-                          },
+                    btnLabel: "Sign Up",
+                    paddingLeft: 70,
+                    paddingRight: 70,
+                    onPressed: () async {
+                      try {
+                        await provider.signUp(
+                          nameController.text.trim(),
+                          int.tryParse(ageController.text.trim()) ?? 0,
+                          numberController.text.trim(),
+                          emailController.text.trim(),
+                          passwordController.text.trim(),
                         );
+
+                        // ✅ After successful sign-up, show email verification message
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                "✅ Sign up successful! Please check your email (and spam folder) to verify your account.",
+                              ),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+
+                          // You can delay navigation a little so user sees message
+                          await Future.delayed(const Duration(seconds: 2));
+
+                          Navigator.pushReplacementNamed(context, AppRoutes.login);
+                        }
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("❌ Sign Up failed: $e")),
+                        );
+                      }
+                    },
+                  );
                 },
               ),
 
@@ -146,7 +168,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       // ✅ Navigation after successful signup
                       Navigator.pushReplacementNamed(context, AppRoutes.home);
                     } else {
-                      // ❌ Show error if signup failed
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text("Sign Up failed, please try again"),

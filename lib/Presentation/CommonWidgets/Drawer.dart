@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:openlibrary_book_explorer/Providers/ChangeModeProvider.dart';
 import 'package:provider/provider.dart';
 import '../../Configuration/Routes.dart';
-import '../../Providers/authProvider.dart';
+import '../../Providers/AuthenticationProvider.dart';
 import '../Elements/CustomContainer.dart';
 import '../Elements/CustomText.dart';
 
@@ -12,7 +12,7 @@ class DrawerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final authProvider = Provider.of<AutheProvider>(context);
+    final authProvider = Provider.of<AuthenticationProvider>(context);
 
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.6,

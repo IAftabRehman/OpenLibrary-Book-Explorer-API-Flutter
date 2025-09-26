@@ -26,13 +26,12 @@ class _LogInScreenState extends State<LogInScreen> {
     final authProvider = Provider.of<AuthenticationProvider>(context);
     return Scaffold(
       body: MyContainer(
-        height: double.infinity,
         decoration: BoxDecoration(gradient: themeProvider.backgroundColor),
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 100),
+            const SizedBox(height: 80),
 
             /// Title Text
             MyText(

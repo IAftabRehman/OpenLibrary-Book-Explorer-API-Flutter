@@ -1,71 +1,122 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:openlibrary_book_explorer/Models/RegistrationModel.dart';
-import 'package:openlibrary_book_explorer/Services/AuthenticationServices.dart';
-import 'package:openlibrary_book_explorer/Services/RegistrationServices.dart';
+import '../Models/RegistrationModel.dart';
+import '../Services/AuthenticationServices.dart';
+import '../Services/RegistrationServices.dart';
 
-class AuthenticationProvider extends ChangeNotifier {
-  bool isLoading = false;
+class AuthenticationProvider with ChangeNotifier {
+  bool _isLoggedIn = false;
+  bool _isLoading = false;
 
-  Future signUp(
-    String name,
-    int age,
-    String phoneNumber,
-    String email,
-    String password,
-  ) async {
+  String? _name;
+  String? _email;
+  String? _profilePic;
+
+  bool get isLoggedIn => _isLoggedIn;
+  bool get isLoading => _isLoading;
+
+  String get name => _name ?? "Guest User";
+  String get email => _email ?? "Login to continue";
+  String get profilePic => _profilePic ?? "assets/images/default_user.png";
+
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
+  /// 📝 SIGNUP
+  Future<bool> signUp(
+      String name,
+      int age,
+      String phoneNumber,
+      String email,
+      String password,
+      ) async {
     try {
       isLoading = true;
-      notifyListeners();
 
-      // Step 1: Register with Authentication Service
-      await AuthenticationServices().registerUser(
+      final user = await AuthenticationServices().registerUser(
         email: email,
         password: password,
       );
 
-      // Step 2: Save user data in Firestore (or DB)
+      if (user == null) throw Exception("User registration failed!");
+
+      await user.updateDisplayName(name);
+      await user.reload();
+
       await RegistrationServices().createAccount(
         RegistrationModel(
-          docId: DateTime.now().toIso8601String(),
+          docId: user.uid,
           createdAt: DateTime.now().microsecondsSinceEpoch,
           name: name,
           age: age,
           phoneNumber: phoneNumber,
           email: email,
-          password: password,
+          password: "", // ❌ don’t store raw password
         ),
       );
 
-      // Success → stop loading
-      isLoading = false;
-      notifyListeners();
+      _isLoggedIn = true;
+      _name = name;
+      _email = email;
+
+      return true; // ✅ success
     } catch (e) {
+      debugPrint("❌ SignUp Error: ${e.toString()}");
+      return false; // ❌ failed
+    } finally {
       isLoading = false;
-      notifyListeners();
-      debugPrint("SignUp Error: ${e.toString()}");
     }
   }
 
+
+  /// 🔑 LOGIN
   Future<bool> login(String email, String password) async {
     try {
       isLoading = true;
-      notifyListeners();
 
-      final user = await AuthenticationServices()
-          .loginUser(email: email, password: password);
+      final user = await AuthenticationServices().loginUser(
+        email: email,
+        password: password,
+      );
 
-      isLoading = false;
-      notifyListeners();
+      if (user != null) {
+        if (!user.emailVerified) {
+          await user.sendEmailVerification();
+          throw Exception("Please verify your email before logging in.");
+        }
 
-      // if login is successful → return true
-      return user != null;
+        _isLoggedIn = true;
+        _email = email;
+        _name = user.displayName ?? "User";
+        _profilePic = user.photoURL;
+        return true;
+      }
+      return false;
     } catch (e) {
-      isLoading = false;
-      notifyListeners();
       debugPrint("❌ Login Error: ${e.toString()}");
-      return false; // login failed
+      return false;
+    } finally {
+      isLoading = false;
     }
   }
 
+  /// 🔓 LOGOUT
+  Future<void> logout() async {
+    await AuthenticationServices().logoutUser();
+    _isLoggedIn = false;
+    _name = null;
+    _email = null;
+    _profilePic = null;
+    notifyListeners();
+  }
+
+  /// 🔄 RESET PASSWORD
+  Future<void> resetPassword(String email) async {
+    try {
+      await AuthenticationServices().resetPassword(email);
+    } catch (e) {
+      debugPrint("❌ Reset Password Error: ${e.toString()}");
+    }
+  }
 }

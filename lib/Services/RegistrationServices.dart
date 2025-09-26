@@ -5,6 +5,7 @@ class RegistrationServices {
   Future createAccount(RegistrationModel model) async {
     return await FirebaseFirestore.instance
         .collection('createAccount')
-        .add(model.toJson());
+        .doc(model.docId)
+        .set(model.toJson());
   }
 }
