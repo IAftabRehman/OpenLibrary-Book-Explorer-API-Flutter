@@ -114,7 +114,7 @@ class _TrendingBookState extends State<TrendingBook> {
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(alpha: 0.1),
                                 blurRadius: 6,
                                 offset: const Offset(2, 4),
                               ),
@@ -180,7 +180,7 @@ class _TrendingBookState extends State<TrendingBook> {
                                       fontWeight: FontWeight.w500,
                                       color: themeProvider
                                           .primaryTextColor
-                                          .withOpacity(0.7),
+                                          .withValues(alpha: 0.7),
                                       maxLines: 1,
                                       textOverflow: TextOverflow.ellipsis,
                                     ),

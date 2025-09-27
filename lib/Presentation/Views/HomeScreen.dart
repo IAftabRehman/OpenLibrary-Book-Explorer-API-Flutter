@@ -147,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
       appBar: AppBar(
-        backgroundColor: Colors.black.withOpacity(0.2),
+        backgroundColor: Colors.black.withValues(alpha: 0.2),
         elevation: 0, // remove shadow
         leading: MyIconContainer(
           onTap: () {
@@ -175,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             MyContainer(
-              color: Colors.black.withOpacity(0.6),
+              color: Colors.black.withValues(alpha: 0.6),
               width: double.infinity,
               height: double.infinity,
               padding: EdgeInsets.symmetric(vertical: 20),
@@ -253,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(12),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
+                                          color: Colors.black.withValues(alpha: 0.1),
                                           blurRadius: 4,
                                           offset: const Offset(2, 3),
                                         ),
@@ -357,7 +357,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       !authProvider.isLoggedIn
                           ? Center(
                               child: MyContainer(
-                                color: Colors.red.withOpacity(0.5),
+                                color: Colors.red.withValues(alpha: 0.5),
                                 borderRadius: BorderRadius.circular(10),
                                 padding: EdgeInsets.symmetric(
                                   horizontal: 10,

@@ -4,7 +4,7 @@ import '../Elements/CustomText.dart';
 
 MyContainer waitingCard(String text) {
   return MyContainer(
-    color: Colors.red.withOpacity(0.7),
+    color: Colors.red.withValues(alpha: 0.7),
     borderRadius: BorderRadius.circular(10),
     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
     child: Column(
