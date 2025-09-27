@@ -31,8 +31,8 @@ class DrawerWidget extends StatelessWidget {
                         shape: BoxShape.circle,
                         image: DecorationImage(
                           image: authProvider.isLoggedIn
-                              ? AssetImage(authProvider.profilePic)
-                              : AssetImage("assets/images/default_user.png"),
+                              ? AssetImage("assets/icons/user.png")
+                              : AssetImage("assets/icons/no_user.png"),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -50,18 +50,6 @@ class DrawerWidget extends StatelessWidget {
                       color: themeProvider.primaryTextColor,
                     ),
                   ],
-                ),
-              ),
-
-              /// My Library
-              ListTile(
-                leading: Icon(
-                  Icons.library_books_outlined,
-                  color: themeProvider.primaryTextColor,
-                ),
-                title: MyText(
-                  text: "My Library",
-                  fontWeight: FontWeight.bold,
                 ),
               ),
 

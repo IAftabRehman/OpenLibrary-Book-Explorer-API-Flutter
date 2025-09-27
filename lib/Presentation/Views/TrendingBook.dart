@@ -56,7 +56,7 @@ class _TrendingBookState extends State<TrendingBook> {
       backgroundColor: Colors.transparent,
       appBar: AppBarWidget(
         titleText: "Trending Books",
-        searchIcon: true,
+        searchIcon: false,
         onSearchToggle: (isOpen) {
           setState(() {
             openSearch = isOpen;

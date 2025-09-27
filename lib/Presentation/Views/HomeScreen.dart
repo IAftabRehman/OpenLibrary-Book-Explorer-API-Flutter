@@ -1,11 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:openlibrary_book_explorer/Presentation/CommonWidgets/Drawer.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomImageView.dart';
+import 'package:openlibrary_book_explorer/Providers/AuthenticationProvider.dart';
 import 'package:openlibrary_book_explorer/Providers/ChangeModeProvider.dart';
 import 'package:openlibrary_book_explorer/Configuration/Routes.dart';
 import 'package:openlibrary_book_explorer/Models/AuthorsModel.dart';
 import 'package:openlibrary_book_explorer/Models/CategoriesModel.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomContainer.dart';
+import 'package:openlibrary_book_explorer/Providers/FavoriteProvider.dart';
 import 'package:provider/provider.dart';
 
 import '../../Models/FavouriteBookModel.dart';
@@ -110,6 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
     AuthorsModel(name: "Anthony D. Smith"),
     AuthorsModel(name: "Christian d' Elvert"),
   ];
+  final user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -135,7 +139,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    // final libraryProvider = Provider.of<LibraryProvider>(context);
+    final favoriteProvider = Provider.of<FavoritesProvider>(context);
+    final authProvider = Provider.of<AuthenticationProvider>(context);
 
     return Scaffold(
       key: _scaffoldKey,
@@ -241,54 +246,55 @@ class _HomeScreenState extends State<HomeScreen> {
                                       );
                                     }
                                   },
-                                  child: Expanded(
-                                    child: MyContainer(
-                                      width: 120,
-                                      margin: const EdgeInsets.symmetric(
-                                        horizontal: 6,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color:
-                                            themeProvider.buttonBackgroundColor,
-                                        borderRadius: BorderRadius.circular(12),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(0.1),
-                                            blurRadius: 4,
-                                            offset: const Offset(2, 3),
+                                  child: MyContainer(
+                                    width: 120,
+                                    // Already defined
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      gradient: themeProvider.backgroundColor,
+                                      borderRadius: BorderRadius.circular(12),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 4,
+                                          offset: const Offset(2, 3),
+                                        ),
+                                      ],
+                                    ),
+                                    padding: const EdgeInsets.all(6),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
                                           ),
-                                        ],
-                                      ),
-                                      padding: const EdgeInsets.all(6),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          // 📕 Small Book Cover
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                              8,
+                                          child: MyContainer(
+                                            height: 50,
+                                            width: double.infinity,
+                                            color: Colors.black54,
+                                            child: CommonImageView(
+                                              imagePath:
+                                                  themeProvider.isNightMode
+                                                  ? 'assets/icons/darkModeBook.png'
+                                                  : 'assets/icons/lightModeBook.png',
+                                              fit: BoxFit.contain,
                                             ),
-                                            child: MyContainer(
-                                              height: 50,
-                                              width: double.infinity,
-                                              color: Colors.black54,
-                                              child: CommonImageView(imagePath: themeProvider.isNightMode ? 'assets/icons/darkModeBook.png' : 'assets/icons/lightModeBook.png', fit: BoxFit.contain,)
-                                            ),
                                           ),
-                                          const SizedBox(height: 6),
-                                    
-                                          // 📝 Smaller Title
-                                          MyText(
-                                            text: book['title'] ?? "Unknown",
-                                            size: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: themeProvider.primaryTextColor,
-                                            maxLines: 2,
-                                            textOverflow: TextOverflow.ellipsis,
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                        const SizedBox(height: 6),
+                                        MyText(
+                                          text: book['title'] ?? "Unknown",
+                                          size: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: themeProvider.primaryTextColor,
+                                          maxLines: 2,
+                                          textOverflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 );
@@ -300,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
 
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 30),
 
                   listViewContainer(
                     context,
@@ -312,13 +318,175 @@ class _HomeScreenState extends State<HomeScreen> {
                     categoriesModel,
                   ),
 
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 30),
 
                   listViewContainer(context, themeProvider, "Book Authors", () {
                     Navigator.pushNamed(context, AppRoutes.authors);
                   }, authorsModel),
 
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 30),
+
+                  // Favorite Books Section
+                  // inside build method (Favorite Books Section part)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            MyText(
+                              text: "Favorite Books",
+                              size: 18,
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            MyText(
+                              text: "See All",
+                              color: Colors.green,
+                              decoration: TextDecoration.underline,
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.favorite,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+
+                      /// ✅ Corrected Login check
+                      !authProvider.isLoggedIn
+                          ? Center(
+                              child: MyContainer(
+                                color: Colors.red.withOpacity(0.5),
+                                borderRadius: BorderRadius.circular(10),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 10,
+                                ),
+                                child: MyText(
+                                  text: "Login to see your favorites",
+                                  size: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
+                          : MyContainer(
+                        height: 100,
+                              child: StreamBuilder<List<Map<String, dynamic>>>(
+                                stream: favoriteProvider.favoritesStream(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                  if (!snapshot.hasData ||
+                                      snapshot.data!.isEmpty) {
+                                    return Center(
+                                      child: MyText(
+                                        text: "No favorite books yet",
+                                        color: Colors.white70,
+                                      ),
+                                    );
+                                  }
+
+                                  final favorites = snapshot.data!;
+
+                                  return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: favorites.length,
+                                    itemBuilder: (context, index) {
+                                      final book = favorites[index];
+
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 6,
+                                        ),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            if (book["ocaid"] != null) {
+                                              Navigator.pushNamed(
+                                                context,
+                                                AppRoutes.bookRead,
+                                                arguments: {
+                                                  "ocaid": book["ocaid"],
+                                                },
+                                              );
+                                            } else {
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                    "No PDF available",
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          },
+                                          child: MyContainer(
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                            border: Border.all(
+                                              width: 1,
+                                              color: Colors.green,
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  child:
+                                                      book["coverUrl"] != null
+                                                      ? Image.network(
+                                                          book["coverUrl"],
+                                                          height: 70,
+                                                          width: 70,
+                                                          fit: BoxFit.cover,
+                                                        )
+                                                      : Container(
+                                                          height: 70,
+                                                          width: 70,
+                                                          color: Colors.grey,
+                                                          child: const Icon(
+                                                            Icons.book,
+                                                            size: 40,
+                                                          ),
+                                                        ),
+                                                ),
+                                                const SizedBox(height: 6),
+                                                MyText(
+                                                  text:
+                                                      book["title"] ??
+                                                      "No Title",
+                                                  size: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  maxLines: 2,
+                                                  textOverflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -343,7 +511,12 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                MyText(text: titleName, size: 18, color: Colors.white70, fontWeight: FontWeight.bold),
+                MyText(
+                  text: titleName,
+                  size: 18,
+                  color: Colors.white70,
+                  fontWeight: FontWeight.bold,
+                ),
                 MyText(
                   text: "See All",
                   color: Colors.green,
