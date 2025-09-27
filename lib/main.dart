@@ -1,11 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:openlibrary_book_explorer/Providers/AuthenticationProvider.dart';
-import 'package:openlibrary_book_explorer/Providers/FavoriteProvider.dart';
-import 'package:openlibrary_book_explorer/Providers/LibraryProvider.dart';
-import 'package:openlibrary_book_explorer/Providers/ChangeModeProvider.dart';
+import 'package:openlibrary_book_explorer/Providers/ContactProvider.dart';
 import 'package:provider/provider.dart';
 import 'Configuration/Routes.dart';
+import 'Providers/AuthenticationProvider.dart';
+import 'Providers/FavoriteProvider.dart';
+import 'Providers/LibraryProvider.dart';
+import 'Providers/ChangeModeProvider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LibraryProvider()),
         ChangeNotifierProvider(create: (_) => FavoritesProvider()),
         ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
+        ChangeNotifierProvider(create: (_) => ContactProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -31,7 +33,6 @@ class MyApp extends StatelessWidget {
         initialRoute: AppRoutes.splash,
         routes: AppRoutes.routes,
         onGenerateRoute: AppRoutes.onGenerateRoute,
-        // home: HomeScreen(),
       ),
     );
   }

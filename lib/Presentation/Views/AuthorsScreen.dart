@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:openlibrary_book_explorer/Configuration/Routes.dart';
+import 'package:openlibrary_book_explorer/Presentation/CommonWidgets/WaitingCard.dart';
 import 'package:openlibrary_book_explorer/Providers/LibraryProvider.dart';
 import 'package:provider/provider.dart';
 import '../../Providers/ChangeModeProvider.dart';
@@ -62,7 +63,7 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
           decoration: BoxDecoration(gradient: themeProvider.backgroundColor),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (openSearch)
                 MyTextField(
@@ -86,24 +87,13 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
 
               const SizedBox(height: 10),
 
-              Expanded(
-                child: libraryProvider.isLoading
-                    ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Center(child: CircularProgressIndicator()),
-                    const SizedBox(height: 20),
-                    MyText(
-                      text:
-                      "⏳ Please wait, fetching all authors may take some time...",
-                      color: themeProvider.primaryTextColor,
-                    ),
-                  ],
-                )
-                    : ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: filteredAuthors.length,
-                  itemBuilder: (context, index) {
+              libraryProvider.isLoading
+                  ? waitingCard("Please wait, fetching all authors may take some time...")
+                  : Expanded(
+                    child: ListView.builder(
+                                    physics: const BouncingScrollPhysics(),
+                                    itemCount: filteredAuthors.length,
+                                    itemBuilder: (context, index) {
                     var author = filteredAuthors[index];
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -157,9 +147,9 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
                         ),
                       ),
                     );
-                  },
-                ),
-              ),
+                                    },
+                                  ),
+                  ),
             ],
           ),
         ),

@@ -183,18 +183,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 40),
-
                   Consumer<LibraryProvider>(
                     builder: (context, libraryProvider, _) {
                       if (libraryProvider.isLoading) {
                         return const Center(child: CircularProgressIndicator());
                       }
-
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // 🔹 Header
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Row(
@@ -358,7 +354,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 10),
 
-                      /// ✅ Corrected Login check
                       !authProvider.isLoggedIn
                           ? Center(
                               child: MyContainer(
@@ -377,7 +372,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             )
                           : MyContainer(
-                        height: 100,
+                              height: 120,
                               child: StreamBuilder<List<Map<String, dynamic>>>(
                                 stream: favoriteProvider.favoritesStream(),
                                 builder: (context, snapshot) {
@@ -432,9 +427,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                             }
                                           },
                                           child: MyContainer(
+                                            width: 100,
                                             borderRadius: BorderRadius.circular(
-                                              12,
+                                              10,
                                             ),
+                                            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                                             border: Border.all(
                                               width: 1,
                                               color: Colors.green,
@@ -465,15 +462,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         ),
                                                 ),
                                                 const SizedBox(height: 6),
-                                                MyText(
-                                                  text:
-                                                      book["title"] ??
-                                                      "No Title",
-                                                  size: 14,
-                                                  fontWeight: FontWeight.bold,
-                                                  maxLines: 2,
-                                                  textOverflow:
-                                                      TextOverflow.ellipsis,
+                                                Flexible(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      MyText(
+                                                        text:
+                                                            book["title"] ??
+                                                            "No Title",
+                                                        size: 14,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white,
+                                                        maxLines: 1,
+                                                        textOverflow:
+                                                            TextOverflow
+                                                                .ellipsis,
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ],
                                             ),

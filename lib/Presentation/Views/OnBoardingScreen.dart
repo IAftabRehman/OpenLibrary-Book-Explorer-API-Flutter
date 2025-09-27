@@ -6,6 +6,7 @@ import 'package:openlibrary_book_explorer/Presentation/Elements/CustomImageView.
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomText.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import '../../Configuration/SharedPreference.dart';
 import '../../Providers/ChangeModeProvider.dart';
 
 class OnBoardingScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     OnBoardingModel(
       title: "Discover Books",
       subTitle:
-          "Search millions of books by title, author, or ISBN. Find exactly what you’re looking for in seconds.",
+          "Search millions of books by title, author. Find exactly what you’re looking for in seconds.",
       image: "assets/icons/onBoarding1.png",
     ),
     OnBoardingModel(
@@ -94,11 +95,11 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
             /// 🔵 SmoothPageIndicator at the bottom
             SmoothPageIndicator(
-              controller: controller, // ✅ connect controller
+              controller: controller,
               count: model.length,
               effect: JumpingDotEffect(
-                dotColor: Colors.grey.shade400,
-                activeDotColor: Colors.green,
+                dotColor: Colors.white,
+                activeDotColor: Colors.blue,
                 spacing: 15,
                 dotHeight: 13,
                 dotWidth: 13,
@@ -121,7 +122,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               paddingTop: 10,
               btnLabel: "Skip",
               borderRadius: BorderRadius.circular(20),
-              onPressed: () {
+              onPressed: () async {
+                await AppPreferences.setOnBoardingSeen(true);
                 Navigator.pushNamed(context, AppRoutes.home);
               },
             ),

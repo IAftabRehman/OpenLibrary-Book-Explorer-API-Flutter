@@ -3,6 +3,7 @@ import 'package:openlibrary_book_explorer/Presentation/Views/AuthorDetails.dart'
 import 'package:openlibrary_book_explorer/Presentation/Views/AuthorsScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/BookRead.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/CategoriesScreen.dart';
+import 'package:openlibrary_book_explorer/Presentation/Views/ContactMeScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/FavoriteScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/ForgetPasswordScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/HelpScreen.dart';
@@ -31,6 +32,7 @@ class AppRoutes {
   static const String bookRead = '/bookRead';
   static const String favorite = '/favorite';
   static const String help = '/help';
+  static const String contact = '/contactMe';
 
   static Map<String, WidgetBuilder> routes = {
     splash: (context) => SplashScreen(),
@@ -45,6 +47,7 @@ class AppRoutes {
     trendingBook: (context) => TrendingBook(),
     favorite: (context) => FavoriteScreen(),
     help: (context) => HelpScreen(),
+    contact: (context) => ContactMeScreen()
   };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {

@@ -164,10 +164,39 @@ class DrawerWidget extends StatelessWidget {
                   color: themeProvider.primaryTextColor,
                 ),
                 title: MyText(text: "LogOut", fontWeight: FontWeight.bold),
-                onTap: () {
-                  authProvider.logout();
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, AppRoutes.login, (route) => false);
+                onTap: () async {
+                  final shouldLogout = await showDialog<bool>(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text("Confirm Logout"),
+                        content: const Text("Are you sure you want to log out?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context, false); // no
+                            },
+                            child: const Text("No"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context, true); // yes
+                            },
+                            child: const Text("Yes"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  if (shouldLogout == true) {
+                    authProvider.logout();
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      AppRoutes.login,
+                          (route) => false,
+                    );
+                  }
                 },
               )
                   : ListTile(

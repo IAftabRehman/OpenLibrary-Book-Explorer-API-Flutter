@@ -101,7 +101,7 @@ class AuthenticationProvider with ChangeNotifier {
     }
   }
 
-  /// 🔓 LOGOUT
+  /// LOGOUT
   Future<void> logout() async {
     await AuthenticationServices().logoutUser();
     _isLoggedIn = false;
@@ -112,11 +112,16 @@ class AuthenticationProvider with ChangeNotifier {
   }
 
   /// 🔄 RESET PASSWORD
-  Future<void> resetPassword(String email) async {
+  Future<bool> resetPassword(String email) async {
     try {
+      isLoading = true;
       await AuthenticationServices().resetPassword(email);
+      return true; // ✅ success
     } catch (e) {
       debugPrint("❌ Reset Password Error: ${e.toString()}");
+      return false; // ❌ failed
+    } finally {
+      isLoading = false;
     }
   }
 }

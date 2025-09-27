@@ -159,7 +159,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: MyText(
                   text: "Already have an account? LogIn",
                   size: 12,
-                  color: Colors.lightGreenAccent,
+                  color: themeProvider.primaryTextColor,
                   fontWeight: FontWeight.w600,
                   textAlign: TextAlign.right,
                   decoration: TextDecoration.underline,

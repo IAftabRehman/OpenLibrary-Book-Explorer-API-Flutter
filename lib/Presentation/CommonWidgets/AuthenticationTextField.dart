@@ -4,26 +4,34 @@ import 'package:provider/provider.dart';
 import '../Elements/CustomTextField.dart';
 
 class AuthenticationTextField extends StatelessWidget {
-  TextEditingController controller;
-  TextInputType? keyboard;
-  String hintText;
-  IconData? suffixIcon;
-  bool isPasswordField = false;
-  AuthenticationTextField({super.key, required this.controller, this.keyboard, required this.hintText,this.suffixIcon, required this.isPasswordField});
+  final TextEditingController controller;
+  final TextInputType? keyboard;
+  final String hintText;
+  final IconData? suffixIcon;
+  final bool isPasswordField;
+
+  const AuthenticationTextField({
+    super.key,
+    required this.controller,
+    this.keyboard,
+    required this.hintText,
+    this.suffixIcon,
+    this.isPasswordField = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return MyTextField(
-        controller: controller,
-        keyboardType:  keyboard ?? TextInputType.text,
-        hintText: hintText,
-        hintColor: Colors.blue,
-        hintSize: 15,
-        textColor: themeProvider.primaryTextColor,
-        suffixIcon: suffixIcon,
-        suffixColor: themeProvider.primaryTextColor,
-        isPasswordField: isPasswordField,
-      );
+      controller: controller,
+      keyboardType: keyboard ?? TextInputType.text,
+      hintText: hintText,
+      hintColor: Colors.blue,
+      hintSize: 15,
+      textColor: Colors.black,
+      suffixIcon: suffixIcon,
+      suffixColor: themeProvider.primaryTextColor,
+      isPasswordField: isPasswordField,
+    );
   }
 }

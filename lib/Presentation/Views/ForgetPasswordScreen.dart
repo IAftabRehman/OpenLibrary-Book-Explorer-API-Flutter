@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:openlibrary_book_explorer/Configuration/Routes.dart';
+import 'package:openlibrary_book_explorer/Providers/AuthenticationProvider.dart';
 import 'package:provider/provider.dart';
 import '../../Providers/ChangeModeProvider.dart';
 import '../CommonWidgets/AuthenticationTextField.dart';
@@ -14,21 +16,32 @@ class ForgetPasswordScreen extends StatefulWidget {
 }
 
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
-
   TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final authProvider = Provider.of<AuthenticationProvider>(context);
     return Scaffold(
       body: MyContainer(
         height: double.infinity,
         decoration: BoxDecoration(gradient: themeProvider.backgroundColor),
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(height: 100),
+            const SizedBox(height: 30),
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, AppRoutes.login);
+                },
+                iconSize: 35,
+                icon: Icon(Icons.keyboard_arrow_left),
+              ),
+            ),
+            const SizedBox(height: 200),
 
             /// Title Text
             MyText(
@@ -42,7 +55,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
             /// Subtitle Text
             MyText(
               text:
-              "Don’t worry, reset your password and unlock your bookshelf again.",
+                  "Don’t worry, reset your password and unlock your bookshelf again.",
               size: 17,
               fontWeight: FontWeight.w500,
               textAlign: TextAlign.center,
@@ -65,7 +78,40 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               btnLabel: "Check Email",
               paddingLeft: 70,
               paddingRight: 70,
-              onPressed: () {},
+              onPressed: () async {
+                final email = emailController.text.trim();
+
+                if (email.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Please enter your email")),
+                  );
+                  return;
+                }
+
+                final success = await authProvider.resetPassword(email);
+
+                if (success) {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text("Check Your Email"),
+                      content: Text(
+                        "A reset link has been sent to $email. Please check your inbox.",
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text("OK"),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text("Reset failed")));
+                }
+              },
             ),
           ],
         ),

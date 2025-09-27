@@ -35,7 +35,7 @@ class _LogInScreenState extends State<LogInScreen> {
 
             /// Title Text
             MyText(
-              text: "Enter Your Library",
+              text: "Login",
               size: 20,
               fontWeight: FontWeight.bold,
               color: themeProvider.primaryTextColor,
@@ -45,7 +45,7 @@ class _LogInScreenState extends State<LogInScreen> {
             /// Subtitle Text
             MyText(
               text:
-                  "Access your saved favorites, explore authors, and pick up where you left off.",
+                  "Log in to unlock your favorites and continue your reading journey.",
               size: 17,
               fontWeight: FontWeight.w500,
               textAlign: TextAlign.center,
@@ -138,7 +138,7 @@ class _LogInScreenState extends State<LogInScreen> {
                 text: "Don't have an account? SignUp",
                 size: 13,
                 decoration: TextDecoration.underline,
-                color: Colors.lightGreenAccent,
+                color: themeProvider.primaryTextColor,
                 fontWeight: FontWeight.w600,
                 textAlign: TextAlign.right,
                 onTap: () {

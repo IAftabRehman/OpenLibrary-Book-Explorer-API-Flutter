@@ -35,16 +35,17 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   flutter_animate: ^4.5.2 # For Animation (Like Button Animate)
+  smooth_page_indicator: ^1.2.1 # OnBoarding Smooth Dot Indicator
   flutter_bounce: ^1.1.0  # For Bounce (Like Button Bounce)
   video_player: ^2.10.0   # For Video Playing (Like in Splash Screen)
-  provider: ^6.1.5+1
+  provider: ^6.1.5+1 # For State Management
   firebase_core: ^4.1.0  # For Firebase
   firebase_auth: ^6.0.2 # For Firebase Authentication
   cloud_firestore: ^6.0.1 # For Firebase Data Store
-  http: ^1.5.0
-  webview_flutter: ^4.13.0
-  syncfusion_flutter_pdfviewer: ^31.1.19
-  smooth_page_indicator: ^1.2.1
+  http: ^1.5.0 # For API Handling
+  syncfusion_flutter_pdfviewer: ^31.1.19 # For PDF View on App
+  shared_preferences: ^2.5.3 # Local Storage
+  url_launcher: ^6.3.2 # URL Launcher
 
 
 dev_dependencies:

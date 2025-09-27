@@ -7,9 +7,9 @@ import 'package:openlibrary_book_explorer/Providers/LibraryProvider.dart';
 import 'package:provider/provider.dart';
 import '../CommonWidgets/AppBarWidget.dart';
 import '../CommonWidgets/Drawer.dart';
+import '../CommonWidgets/WaitingCard.dart';
 import '../Elements/CustomContainer.dart';
 import '../Elements/CustomText.dart';
-import '../Elements/CustomTextField.dart';
 
 class TrendingBook extends StatefulWidget {
   const TrendingBook({super.key});
@@ -20,17 +20,12 @@ class TrendingBook extends StatefulWidget {
 
 class _TrendingBookState extends State<TrendingBook> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool openSearch = false;
-  String searchQuery = "";
 
   @override
   void initState() {
     super.initState();
     Future.microtask(() {
-      // fetch trending books
       Provider.of<LibraryProvider>(context, listen: false).fetchTrendingBooks();
-
-      // start listening to favorites for the currently logged-in user
       final fav = Provider.of<FavoritesProvider>(context, listen: false);
       fav.listenToUserBooks();
     });
@@ -42,62 +37,28 @@ class _TrendingBookState extends State<TrendingBook> {
     final libraryProvider = Provider.of<LibraryProvider>(context);
     final favoritesProvider = Provider.of<FavoritesProvider>(context);
 
-    final filteredBooks = searchQuery.isEmpty
-        ? libraryProvider.books
-        : libraryProvider.books.where((book) {
-      final title = (book['title'] ?? "").toString().toLowerCase();
-      final author = (book['author'] ?? "").toString().toLowerCase();
-      return title.contains(searchQuery.toLowerCase()) ||
-          author.contains(searchQuery.toLowerCase());
-    }).toList();
-
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.transparent,
-      appBar: AppBarWidget(
+      appBar: const AppBarWidget(
         titleText: "Trending Books",
         searchIcon: false,
-        onSearchToggle: (isOpen) {
-          setState(() {
-            openSearch = isOpen;
-            if (!isOpen) searchQuery = "";
-          });
-        },
       ),
-      drawer: DrawerWidget(),
+      drawer: const DrawerWidget(),
       body: MyContainer(
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(gradient: themeProvider.backgroundColor),
         padding: const EdgeInsets.all(16),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (openSearch)
-              MyTextField(
-                backgroundColor: Colors.transparent,
-                borderRadius: BorderRadius.circular(10),
-                textFieldBorder: Border.all(
-                  width: 2,
-                  color: themeProvider.primaryTextColor,
-                ),
-                hintText: "Search Book or Author",
-                hintColor: themeProvider.primaryTextColor,
-                cursorColor: themeProvider.primaryTextColor,
-                textColor: themeProvider.primaryTextColor,
-                textSize: 16,
-                onChanged: (val) {
-                  setState(() {
-                    searchQuery = val;
-                  });
-                },
-              ),
-            const SizedBox(height: 10),
-
-            // main content
-            Expanded(
-              child: libraryProvider.isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : GridView.builder(
+            libraryProvider.isLoading
+                ? waitingCard(
+              "Please wait, fetching Trending Books may take some time...",
+            )
+                : Expanded(
+              child: GridView.builder(
                 physics: const BouncingScrollPhysics(),
                 gridDelegate:
                 const SliverGridDelegateWithFixedCrossAxisCount(
@@ -106,11 +67,9 @@ class _TrendingBookState extends State<TrendingBook> {
                   mainAxisSpacing: 12,
                   childAspectRatio: 0.65,
                 ),
-                itemCount: filteredBooks.length,
+                itemCount: libraryProvider.books.length,
                 itemBuilder: (context, index) {
-                  final book = filteredBooks[index];
-
-                  // compute stable book id
+                  final book = libraryProvider.books[index];
                   final bookId = (book['id'] ??
                       book['ocaid'] ??
                       book['key'] ??
@@ -140,8 +99,10 @@ class _TrendingBookState extends State<TrendingBook> {
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content:
-                              Text("❌ No PDF available for this book")),
+                            content: Text(
+                              "❌ No PDF available for this book",
+                            ),
+                          ),
                         );
                       }
                     },
@@ -198,7 +159,6 @@ class _TrendingBookState extends State<TrendingBook> {
                               ),
                               const SizedBox(height: 10),
 
-                              // Wrap texts in Flexible to prevent overflow
                               Flexible(
                                 child: Column(
                                   crossAxisAlignment:
@@ -210,20 +170,19 @@ class _TrendingBookState extends State<TrendingBook> {
                                       fontWeight: FontWeight.bold,
                                       color:
                                       themeProvider.primaryTextColor,
-                                      maxLines: 2,
-                                      textOverflow:
-                                      TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      textOverflow: TextOverflow.ellipsis,
                                     ),
                                     const SizedBox(height: 6),
                                     MyText(
                                       text: author,
                                       size: 13,
                                       fontWeight: FontWeight.w500,
-                                      color: themeProvider.primaryTextColor
+                                      color: themeProvider
+                                          .primaryTextColor
                                           .withOpacity(0.7),
                                       maxLines: 1,
-                                      textOverflow:
-                                      TextOverflow.ellipsis,
+                                      textOverflow: TextOverflow.ellipsis,
                                     ),
                                   ],
                                 ),
@@ -232,7 +191,6 @@ class _TrendingBookState extends State<TrendingBook> {
                           ),
                         ),
 
-                        // favorite button
                         Positioned(
                           top: 8,
                           right: 8,
@@ -241,19 +199,23 @@ class _TrendingBookState extends State<TrendingBook> {
                               final user =
                                   FirebaseAuth.instance.currentUser;
                               if (user == null) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(
+                                ScaffoldMessenger.of(
+                                  context,
+                                ).showSnackBar(
                                   const SnackBar(
-                                      content: Text(
-                                          "Please log in to save favorites.")),
+                                    content: Text(
+                                      "Please log in to save favorites.",
+                                    ),
+                                  ),
                                 );
                                 return;
                               }
 
                               try {
                                 if (isFav) {
-                                  await favoritesProvider
-                                      .removeBook(bookId);
+                                  await favoritesProvider.removeBook(
+                                    bookId,
+                                  );
                                 } else {
                                   await favoritesProvider.addBook({
                                     "id": bookId,
@@ -265,11 +227,14 @@ class _TrendingBookState extends State<TrendingBook> {
                                   });
                                 }
                               } catch (e) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(
+                                ScaffoldMessenger.of(
+                                  context,
+                                ).showSnackBar(
                                   SnackBar(
-                                      content: Text(
-                                          "Error updating favorites: $e")),
+                                    content: Text(
+                                      "Error updating favorites: $e",
+                                    ),
+                                  ),
                                 );
                               }
                             },
