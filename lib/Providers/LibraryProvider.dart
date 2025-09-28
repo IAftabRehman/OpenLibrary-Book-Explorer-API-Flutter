@@ -11,11 +11,11 @@ class LibraryProvider extends ChangeNotifier {
   List authors = [];
   List selectedAuthor = [];
 
+  /// Fetching Trending Book For Home Screen
   Future<void> fetchTrendingBookForHome() async {
     isLoading = true;
     notifyListeners();
 
-    // Example OpenLibrary API call
     final response = await http.get(
       Uri.parse("https://openlibrary.org/trending/daily.json?limit=10"),
     );
@@ -29,17 +29,15 @@ class LibraryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Fetch Trending Books + Author Details
-  // add imports if not present
-// import 'dart:convert';
-// import 'package:http/http.dart' as http;
-
+  /// Fetching Trending Books For Trending Screen (Book and Author name)
   Future<void> fetchTrendingBooks() async {
     try {
       isLoading = true;
       notifyListeners();
 
-      final url = Uri.parse("https://openlibrary.org/trending/now.json?limit=20");
+      final url = Uri.parse(
+        "https://openlibrary.org/trending/now.json?limit=20",
+      );
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -47,11 +45,14 @@ class LibraryProvider extends ChangeNotifier {
         final works = (data['works'] as List?) ?? [];
 
         books = works.map<Map<String, dynamic>>((work) {
-
           final workKey = work['key'];
-          final ocaid = (work['ia'] != null && work['ia'].isNotEmpty) ? work['ia'][0] : null;
+          final ocaid = (work['ia'] != null && work['ia'].isNotEmpty)
+              ? work['ia'][0]
+              : null;
           final coverId = work['cover_i'];
-          final String id = (workKey ?? ocaid ?? coverId?.toString() ?? work['title']).toString();
+          final String id =
+              (workKey ?? ocaid ?? coverId?.toString() ?? work['title'])
+                  .toString();
 
           final String? coverUrl = coverId != null
               ? "https://covers.openlibrary.org/b/id/$coverId-M.jpg"
@@ -64,7 +65,8 @@ class LibraryProvider extends ChangeNotifier {
             "coverId": coverId,
             "coverUrl": coverUrl,
             "ocaid": ocaid,
-            "author": (work["author_name"] != null && work["author_name"].isNotEmpty)
+            "author":
+                (work["author_name"] != null && work["author_name"].isNotEmpty)
                 ? work["author_name"][0]
                 : "Unknown Author",
           };
@@ -82,11 +84,7 @@ class LibraryProvider extends ChangeNotifier {
     }
   }
 
-
-
-
-
-  /// Fetch Book by Categories
+  /// Fetching Book by Categories
   Future<void> fetchBooksByCategory(String category) async {
     try {
       isLoading = true;
@@ -102,12 +100,14 @@ class LibraryProvider extends ChangeNotifier {
         final data = json.decode(response.body);
 
         books = (data['works'] as List)
-            .map((book) => {
-          "title": book["title"],
-          "authors": book["authors"],
-          "coverId": book["cover_id"], // ✅ cover_id for book images
-          "key": book["key"], // unique identifier
-        })
+            .map(
+              (book) => {
+                "title": book["title"],
+                "authors": book["authors"],
+                "coverId": book["cover_id"], // ✅ cover_id for book images
+                "key": book["key"], // unique identifier
+              },
+            )
             .toList();
       } else {
         books = [];
@@ -122,8 +122,7 @@ class LibraryProvider extends ChangeNotifier {
     }
   }
 
-
-  /// Fetch Authors Name by characters
+  /// Fetching Authors Name by characters
   Future<void> fetchAllAuthors() async {
     try {
       isLoading = true;
@@ -132,7 +131,9 @@ class LibraryProvider extends ChangeNotifier {
       List allAuthors = [];
 
       for (var char in 'abcdefghijklmnopqrstuvwxyz'.split('')) {
-        final url = Uri.parse("https://openlibrary.org/search/authors.json?q=$char");
+        final url = Uri.parse(
+          "https://openlibrary.org/search/authors.json?q=$char",
+        );
         final response = await http.get(url);
 
         if (response.statusCode == 200) {
@@ -142,7 +143,7 @@ class LibraryProvider extends ChangeNotifier {
         }
       }
 
-      authors = allAuthors; // store in your provider
+      authors = allAuthors;
     } catch (e) {
       authors = [];
       debugPrint("❌ Error fetching authors: $e");
@@ -152,7 +153,7 @@ class LibraryProvider extends ChangeNotifier {
     }
   }
 
-  /// Fetch Author Details
+  /// Fetching Author Name
   Future<Map<String, dynamic>?> fetchAuthorDetails(String authorKey) async {
     try {
       isLoading = true;
@@ -178,12 +179,12 @@ class LibraryProvider extends ChangeNotifier {
     }
   }
 
-
-  /// Fetch a readable link for a book (if available)
+  /// Fetching a readable link for a book (if available)
   Future<String?> fetchReadableLink(String workKey) async {
     try {
-      final url =
-      Uri.parse("https://openlibrary.org$workKey/editions.json?limit=1");
+      final url = Uri.parse(
+        "https://openlibrary.org$workKey/editions.json?limit=1",
+      );
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -212,7 +213,7 @@ class LibraryProvider extends ChangeNotifier {
     return null; // no readable copy
   }
 
-
+  /// Fetching Favorite Books
   Future<void> addToFavorites(Map<String, dynamic> book) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
@@ -230,6 +231,4 @@ class LibraryProvider extends ChangeNotifier {
       "timestamp": FieldValue.serverTimestamp(),
     });
   }
-
-
 }

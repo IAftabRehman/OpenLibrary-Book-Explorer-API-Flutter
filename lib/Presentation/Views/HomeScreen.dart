@@ -10,8 +10,6 @@ import 'package:openlibrary_book_explorer/Models/CategoriesModel.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomContainer.dart';
 import 'package:openlibrary_book_explorer/Providers/FavoriteProvider.dart';
 import 'package:provider/provider.dart';
-
-import '../../Models/FavouriteBookModel.dart';
 import '../../Providers/LibraryProvider.dart';
 import '../Elements/CustomText.dart';
 
@@ -25,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  /// Categories Model (Categories Content)
   List<CategoriesModel> categoriesModel = [
     CategoriesModel(name: "Architecture", link: "architecture"),
     CategoriesModel(name: "Art Instruction", link: "art__art_instruction"),
@@ -91,6 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
     CategoriesModel(name: "Psychology", link: "psychology"),
   ];
 
+  /// Authors Model (Some Authors Name That is Shown on Home Screen)
   List<AuthorsModel> authorsModel = [
     AuthorsModel(name: "J.K. Rowling"),
     AuthorsModel(name: "George R.R. Martin"),
@@ -113,8 +113,10 @@ class _HomeScreenState extends State<HomeScreen> {
     AuthorsModel(name: "Anthony D. Smith"),
     AuthorsModel(name: "Christian d' Elvert"),
   ];
+
   final user = FirebaseAuth.instance.currentUser;
 
+  /// Fetching Trending Book
   @override
   void initState() {
     super.initState();
@@ -126,29 +128,30 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  List<FavouriteBookModel> favouriteBookModel = [
-    FavouriteBookModel(name: "Fiction"),
-    FavouriteBookModel(name: "Non-Fiction"),
-    FavouriteBookModel(name: "Science"),
-    FavouriteBookModel(name: "History"),
-    FavouriteBookModel(name: "Technology"),
-    FavouriteBookModel(name: "Kids"),
-    FavouriteBookModel(name: "Businesses"),
-  ];
 
   @override
   Widget build(BuildContext context) {
+
+    /// Theme Provider
     final themeProvider = Provider.of<ThemeProvider>(context);
+
+    /// Favorite Book Shown Provider
     final favoriteProvider = Provider.of<FavoritesProvider>(context);
+
+    /// Authentication Provider
     final authProvider = Provider.of<AuthenticationProvider>(context);
 
     return Scaffold(
       key: _scaffoldKey,
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
+
+      /// AppBar Widget
       appBar: AppBar(
         backgroundColor: Colors.black.withValues(alpha: 0.2),
-        elevation: 0, // remove shadow
+        elevation: 0,
+
+        /// Leading Icon
         leading: MyIconContainer(
           onTap: () {
             _scaffoldKey.currentState?.openDrawer();
@@ -157,6 +160,8 @@ class _HomeScreenState extends State<HomeScreen> {
           iconSize: 30,
           iconColor: Colors.white70,
         ),
+
+        /// Main Title Text
         title: MyText(
           text: "OpenLibrary Book Explorer",
           color: Colors.white70,
@@ -164,16 +169,24 @@ class _HomeScreenState extends State<HomeScreen> {
           size: 22,
         ),
       ),
+
+      /// Drawer Widget
       drawer: DrawerWidget(),
+
+      /// Body Start
       body: SafeArea(
         child: Stack(
           children: [
+
+            /// Background Image
             Positioned.fill(
               child: Image.asset(
                 "assets/images/background.jpg",
                 fit: BoxFit.cover,
               ),
             ),
+
+            /// Foreground Content
             MyContainer(
               color: Colors.black.withValues(alpha: 0.6),
               width: double.infinity,
@@ -183,6 +196,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
+                  /// Tending Books Section
                   Consumer<LibraryProvider>(
                     builder: (context, libraryProvider, _) {
                       if (libraryProvider.isLoading) {
@@ -253,7 +268,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       borderRadius: BorderRadius.circular(12),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withValues(alpha: 0.1),
+                                          color: Colors.black.withValues(
+                                            alpha: 0.1,
+                                          ),
                                           blurRadius: 4,
                                           offset: const Offset(2, 3),
                                         ),
@@ -301,9 +318,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                   ),
-
                   const SizedBox(height: 30),
 
+                  /// Book Categories Section
                   listViewContainer(
                     context,
                     themeProvider,
@@ -313,17 +330,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                     categoriesModel,
                   ),
-
                   const SizedBox(height: 30),
 
+                  /// Authors Name Section
                   listViewContainer(context, themeProvider, "Book Authors", () {
                     Navigator.pushNamed(context, AppRoutes.authors);
                   }, authorsModel),
-
                   const SizedBox(height: 30),
 
-                  // Favorite Books Section
-                  // inside build method (Favorite Books Section part)
+                  /// Favorite Books Section
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -431,7 +446,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             borderRadius: BorderRadius.circular(
                                               10,
                                             ),
-                                            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 5,
+                                              vertical: 5,
+                                            ),
                                             border: Border.all(
                                               width: 1,
                                               color: Colors.green,
@@ -505,6 +523,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// Custom ListView Widget
   MyContainer listViewContainer(
     BuildContext context,
     ThemeProvider themeProvider,

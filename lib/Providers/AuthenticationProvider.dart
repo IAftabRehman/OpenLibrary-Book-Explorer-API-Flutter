@@ -12,10 +12,13 @@ class AuthenticationProvider with ChangeNotifier {
   String? _profilePic;
 
   bool get isLoggedIn => _isLoggedIn;
+
   bool get isLoading => _isLoading;
 
   String get name => _name ?? "Guest User";
+
   String get email => _email ?? "Login to continue";
+
   String get profilePic => _profilePic ?? "assets/images/default_user.png";
 
   set isLoading(bool value) {
@@ -23,14 +26,14 @@ class AuthenticationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// 📝 SIGNUP
+  /// SignUp Logic
   Future<bool> signUp(
-      String name,
-      int age,
-      String phoneNumber,
-      String email,
-      String password,
-      ) async {
+    String name,
+    int age,
+    String phoneNumber,
+    String email,
+    String password,
+  ) async {
     try {
       isLoading = true;
 
@@ -52,7 +55,7 @@ class AuthenticationProvider with ChangeNotifier {
           age: age,
           phoneNumber: phoneNumber,
           email: email,
-          password: "", // ❌ don’t store raw password
+          password: "",
         ),
       );
 
@@ -60,17 +63,16 @@ class AuthenticationProvider with ChangeNotifier {
       _name = name;
       _email = email;
 
-      return true; // ✅ success
+      return true;
     } catch (e) {
       debugPrint("❌ SignUp Error: ${e.toString()}");
-      return false; // ❌ failed
+      return false;
     } finally {
       isLoading = false;
     }
   }
 
-
-  /// 🔑 LOGIN
+  /// Login Logic
   Future<bool> login(String email, String password) async {
     try {
       isLoading = true;
@@ -101,7 +103,7 @@ class AuthenticationProvider with ChangeNotifier {
     }
   }
 
-  /// LOGOUT
+  /// LogOut Logic
   Future<void> logout() async {
     await AuthenticationServices().logoutUser();
     _isLoggedIn = false;
@@ -111,15 +113,15 @@ class AuthenticationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// 🔄 RESET PASSWORD
+  /// Reset Password Logic
   Future<bool> resetPassword(String email) async {
     try {
       isLoading = true;
       await AuthenticationServices().resetPassword(email);
-      return true; // ✅ success
+      return true;
     } catch (e) {
       debugPrint("❌ Reset Password Error: ${e.toString()}");
-      return false; // ❌ failed
+      return false;
     } finally {
       isLoading = false;
     }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:openlibrary_book_explorer/Configuration/Routes.dart';
 import 'package:openlibrary_book_explorer/Providers/AuthenticationProvider.dart';
 import 'package:provider/provider.dart';
-
 import '../../Providers/ChangeModeProvider.dart';
 import '../CommonWidgets/AuthenticationTextField.dart';
 import '../Elements/CustomBottom.dart';
@@ -22,9 +21,14 @@ class _LogInScreenState extends State<LogInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /// Theme Provider
     final themeProvider = Provider.of<ThemeProvider>(context);
+
+    /// Authentication Provider
     final authProvider = Provider.of<AuthenticationProvider>(context);
+
     return Scaffold(
+      /// Body Start
       body: MyContainer(
         decoration: BoxDecoration(gradient: themeProvider.backgroundColor),
         padding: EdgeInsets.symmetric(horizontal: 20),
@@ -93,41 +97,41 @@ class _LogInScreenState extends State<LogInScreen> {
               btnLabel: "LogIn",
               paddingLeft: 70,
               paddingRight: 70,
-                onPressed: () async {
-                  final success = await authProvider.login(
-                    emailController.text.trim(),
-                    passwordController.text.trim(),
+              onPressed: () async {
+                final success = await authProvider.login(
+                  emailController.text.trim(),
+                  passwordController.text.trim(),
+                );
+
+                if (success) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text("Successfully Logged In"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context); // close dialog
+                              Navigator.pushReplacementNamed(
+                                context,
+                                AppRoutes.home, // go to home
+                              );
+                            },
+                            child: const Text("Go to Home Page"),
+                          ),
+                        ],
+                      );
+                    },
                   );
-
-
-                  if (success) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text("Successfully Logged In"),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context); // close dialog
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  AppRoutes.home, // go to home
-                                );
-                              },
-                              child: const Text("Go to Home Page"),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Login failed. Please try again")),
-                    );
-                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Login failed. Please try again"),
+                    ),
+                  );
                 }
-
+              },
             ),
             const SizedBox(height: 15),
 

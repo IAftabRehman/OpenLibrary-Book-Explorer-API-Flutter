@@ -12,6 +12,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   late VideoPlayerController _controller;
 
+  /// Splash Screen (Video Running)
   @override
   void initState() {
     super.initState();
@@ -19,7 +20,6 @@ class _SplashScreenState extends State<SplashScreen> {
       ..initialize().then((_) {
         _controller.play();
         _controller.setLooping(false);
-
         Future.delayed(Duration(seconds: 5), () {
           Navigator.pushReplacementNamed(context, AppRoutes.onBoarding);
         });
@@ -36,6 +36,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      /// Body Start
       body: Center(
         child: _controller.value.isInitialized
             ? SizedBox.expand(

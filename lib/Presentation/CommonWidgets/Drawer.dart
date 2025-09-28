@@ -6,6 +6,7 @@ import '../../Providers/AuthenticationProvider.dart';
 import '../Elements/CustomContainer.dart';
 import '../Elements/CustomText.dart';
 
+/// Drawer Widget
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({super.key});
 
@@ -21,6 +22,7 @@ class DrawerWidget extends StatelessWidget {
           decoration: BoxDecoration(gradient: themeProvider.backgroundColor),
           child: Column(
             children: [
+              /// Top Drawer Header
               DrawerHeader(
                 child: Column(
                   children: [
@@ -38,12 +40,16 @@ class DrawerWidget extends StatelessWidget {
                       ),
                     ),
                     const Spacer(),
+
+                    /// Header Email
                     MyText(
                       text: authProvider.name,
                       size: 16,
                       fontWeight: FontWeight.bold,
                       color: themeProvider.primaryTextColor,
                     ),
+
+                    /// Header Email
                     MyText(
                       text: authProvider.email,
                       size: 12,
@@ -53,22 +59,19 @@ class DrawerWidget extends StatelessWidget {
                 ),
               ),
 
-              /// Home
+              /// Home Tile
               ListTile(
                 leading: Icon(
                   Icons.home_outlined,
                   color: themeProvider.primaryTextColor,
                 ),
-                title: MyText(
-                  text: "Home",
-                  fontWeight: FontWeight.bold,
-                ),
+                title: MyText(text: "Home", fontWeight: FontWeight.bold),
                 onTap: () {
                   Navigator.pushNamed(context, AppRoutes.home);
                 },
               ),
 
-              /// Trending Book
+              /// Trending Book Tile
               ListTile(
                 leading: Icon(
                   Icons.trending_up,
@@ -83,22 +86,19 @@ class DrawerWidget extends StatelessWidget {
                 },
               ),
 
-              /// Categories
+              /// Categories Tile
               ListTile(
                 leading: Icon(
                   Icons.category_outlined,
                   color: themeProvider.primaryTextColor,
                 ),
-                title: MyText(
-                  text: "Categories",
-                  fontWeight: FontWeight.bold,
-                ),
+                title: MyText(text: "Categories", fontWeight: FontWeight.bold),
                 onTap: () {
                   Navigator.pushNamed(context, AppRoutes.categories);
                 },
               ),
 
-              /// Authors
+              /// Authors Tile
               ListTile(
                 leading: Icon(
                   Icons.person_outlined,
@@ -110,7 +110,7 @@ class DrawerWidget extends StatelessWidget {
                 },
               ),
 
-              /// Favorite (Login Check)
+              /// Favorite Tile
               ListTile(
                 leading: Icon(
                   Icons.favorite_outline,
@@ -126,7 +126,7 @@ class DrawerWidget extends StatelessWidget {
                 },
               ),
 
-              /// Theme Mode
+              /// Theme Mode Tile
               ListTile(
                 leading: Icon(
                   themeProvider.isNightMode
@@ -144,7 +144,7 @@ class DrawerWidget extends StatelessWidget {
                 },
               ),
 
-              /// Help
+              /// Help Tile
               ListTile(
                 leading: Icon(
                   Icons.question_mark_outlined,
@@ -156,59 +156,64 @@ class DrawerWidget extends StatelessWidget {
                 },
               ),
 
-              /// Login / Logout
+              /// Login / Logout Tile
               authProvider.isLoggedIn
                   ? ListTile(
-                leading: Icon(
-                  Icons.logout,
-                  color: themeProvider.primaryTextColor,
-                ),
-                title: MyText(text: "LogOut", fontWeight: FontWeight.bold),
-                onTap: () async {
-                  final shouldLogout = await showDialog<bool>(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: const Text("Confirm Logout"),
-                        content: const Text("Are you sure you want to log out?"),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context, false); // no
-                            },
-                            child: const Text("No"),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context, true); // yes
-                            },
-                            child: const Text("Yes"),
-                          ),
-                        ],
-                      );
-                    },
-                  );
+                      leading: Icon(
+                        Icons.logout,
+                        color: themeProvider.primaryTextColor,
+                      ),
+                      title: MyText(
+                        text: "LogOut",
+                        fontWeight: FontWeight.bold,
+                      ),
+                      onTap: () async {
+                        final shouldLogout = await showDialog<bool>(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text("Confirm Logout"),
+                              content: const Text(
+                                "Are you sure you want to log out?",
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context, false); // no
+                                  },
+                                  child: const Text("No"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context, true); // yes
+                                  },
+                                  child: const Text("Yes"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
 
-                  if (shouldLogout == true) {
-                    authProvider.logout();
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      AppRoutes.login,
-                          (route) => false,
-                    );
-                  }
-                },
-              )
+                        if (shouldLogout == true) {
+                          authProvider.logout();
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            AppRoutes.login,
+                            (route) => false,
+                          );
+                        }
+                      },
+                    )
                   : ListTile(
-                leading: Icon(
-                  Icons.login,
-                  color: themeProvider.primaryTextColor,
-                ),
-                title: MyText(text: "Login", fontWeight: FontWeight.bold),
-                onTap: () {
-                  Navigator.pushNamed(context, AppRoutes.login);
-                },
-              ),
+                      leading: Icon(
+                        Icons.login,
+                        color: themeProvider.primaryTextColor,
+                      ),
+                      title: MyText(text: "Login", fontWeight: FontWeight.bold),
+                      onTap: () {
+                        Navigator.pushNamed(context, AppRoutes.login);
+                      },
+                    ),
             ],
           ),
         ),

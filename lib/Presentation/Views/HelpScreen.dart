@@ -5,7 +5,6 @@ import 'package:openlibrary_book_explorer/Presentation/CommonWidgets/AppBarWidge
 import 'package:openlibrary_book_explorer/Presentation/CommonWidgets/Drawer.dart';
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomContainer.dart';
 import 'package:provider/provider.dart';
-
 import '../../Providers/ChangeModeProvider.dart';
 import '../Elements/CustomText.dart';
 
@@ -18,6 +17,8 @@ class HelpScreen extends StatefulWidget {
 
 class _HelpScreenState extends State<HelpScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  /// Help Question Answer Model Content
   List<HelpModel> model = [
     HelpModel(
       title: "What is this app used for?",
@@ -72,44 +73,57 @@ class _HelpScreenState extends State<HelpScreen> {
     HelpModel(
       title: "Do I need an account to use the app?",
       content:
-      "No, you can explore books and authors without an account. But if you want to save favorites or sync across devices, you’ll need to sign in.",
+          "No, you can explore books and authors without an account. But if you want to save favorites or sync across devices, you’ll need to sign in.",
     ),
     HelpModel(
       title: "Does the app support multiple devices?",
       content:
-      "Yes, once you log in with the same account, your saved books and favorites will sync across your devices.",
+          "Yes, once you log in with the same account, your saved books and favorites will sync across your devices.",
     ),
     HelpModel(
       title: "How often is the content updated?",
       content:
-      "The book database is updated regularly, ensuring you always have access to the latest titles, editions, and trending books.",
+          "The book database is updated regularly, ensuring you always have access to the latest titles, editions, and trending books.",
     ),
     HelpModel(
       title: "Can I change the app theme?",
       content:
-      "Yes, the app supports light and dark mode. You can switch themes anytime from the settings.",
+          "Yes, the app supports light and dark mode. You can switch themes anytime from the settings.",
     ),
     HelpModel(
       title: "Is my data secure?",
       content:
-      "Yes, your data is safely stored. Passwords are never shared or stored in plain text, and your information is protected with Firebase authentication.",
+          "Yes, your data is safely stored. Passwords are never shared or stored in plain text, and your information is protected with Firebase authentication.",
     ),
     HelpModel(
       title: "How do I reset my password?",
       content:
-      "If you forget your password, go to the Login screen and tap on 'Forgot Password'. Enter your email, and we’ll send you a reset link.",
+          "If you forget your password, go to the Login screen and tap on 'Forgot Password'. Enter your email, and we’ll send you a reset link.",
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
+
+    /// Theme Provider
     final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
       key: _scaffoldKey,
       extendBodyBehindAppBar: false,
       backgroundColor: Colors.transparent,
-      appBar: AppBarWidget(titleText: "Help", searchIcon: false, contactIcon: true),
+
+      /// AppBar Widget
+      appBar: AppBarWidget(
+        titleText: "Help",
+        searchIcon: false,
+        contactIcon: true,
+      ),
+
+      /// Drawer Widget
       drawer: DrawerWidget(),
+
+      /// Body Start
       body: MyContainer(
         decoration: BoxDecoration(gradient: themeProvider.backgroundColor),
         child: ListView.builder(
@@ -127,6 +141,8 @@ class _HelpScreenState extends State<HelpScreen> {
                 ),
                 child: Column(
                   children: [
+
+                    /// Title (Question)
                     ListTile(
                       title: Text(
                         faq.title,
@@ -137,6 +153,7 @@ class _HelpScreenState extends State<HelpScreen> {
                         ),
                       ),
 
+                      /// Icon
                       trailing: MyIconContainer(
                         onTap: () {
                           setState(() {
@@ -149,6 +166,8 @@ class _HelpScreenState extends State<HelpScreen> {
                         iconColor: themeProvider.primaryTextColor,
                       ),
                     ),
+
+                    /// Subtitle (Answer of Question)
                     AnimatedSize(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,

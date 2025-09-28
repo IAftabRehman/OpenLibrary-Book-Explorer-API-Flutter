@@ -65,6 +65,48 @@ It helps you to:
 
 ---
 
+### 📱 Screenshots
+
+| Splash Screen                                               | OnBoarding Screen                                         |
+|-------------------------------------------------------------|-----------------------------------------------------------|
+| <img src="assets/screenShots/splashScreen.png" width="250"> | <img src="assets/screenShots/onBoarding.png" width="250"> |
+
+
+| Home Screen                                               | Trending Screen                                               |
+|-----------------------------------------------------------|---------------------------------------------------------------|
+| <img src="assets/screenShots/homeScreen.png" width="250"> | <img src="assets/screenShots/trendingScreen.png" width="250"> |
+
+
+| Categories Screen                                               | Individual Category Screen                                         |
+|-----------------------------------------------------------------|--------------------------------------------------------------------|
+| <img src="assets/screenShots/categoriesScreen.png" width="250"> | <img src="assets/screenShots/indivitualCategorie.png" width="250"> |
+
+
+| Author Screen                                               | Waiting Card Screen                                        |
+|-------------------------------------------------------------|------------------------------------------------------------|
+| <img src="assets/screenShots/authorScreen.png" width="250"> | <img src="assets/screenShots/waitingCard.png" width="250"> |
+
+
+| Help Screen                                               | Contact Us Screen                                        |
+|-----------------------------------------------------------|----------------------------------------------------------|
+| <img src="assets/screenShots/helpScreen.png" width="250"> | <img src="assets/screenShots/contactMe.png" width="250"> |
+
+
+| Dark Mode Screen                                        | Favorite Screen                                              |
+|---------------------------------------------------------|--------------------------------------------------------------|
+| <img src="assets/screenShots/darkMode.png" width="250"> | <img src="assets/screenShots/FavoriteBooks.png" width="250"> |
+
+
+| Drawer Login Screen                                            | Sign Up Screen                                              |
+|----------------------------------------------------------------|-------------------------------------------------------------|
+| <img src="assets/screenShots/drawerWithLogin.png" width="250"> | <img src="assets/screenShots/signUpScreen.png" width="250"> |
+
+
+| LogIn Screen                                               | LogOut Screen                                         |
+|------------------------------------------------------------|-------------------------------------------------------|
+| <img src="assets/screenShots/loginScreen.png" width="250"> | <img src="assets/screenShots/logOut.png" width="250"> |
+---
+
 ### 🏁 Getting Started
 
 To get started with this project, follow these steps:

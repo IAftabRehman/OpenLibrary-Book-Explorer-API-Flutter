@@ -24,9 +24,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /// Theme Provider
     final themeProvider = Provider.of<ThemeProvider>(context);
+
+    /// Authentication Provider
     final authProvider = Provider.of<AuthenticationProvider>(context);
     return Scaffold(
+      /// Body Start
       body: MyContainer(
         height: double.infinity,
         decoration: BoxDecoration(gradient: themeProvider.backgroundColor),
@@ -112,45 +116,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   return provider.isLoading
                       ? const CircularProgressIndicator()
                       : MyButton(
-                    btnLabel: "Sign Up",
-                    paddingLeft: 70,
-                    paddingRight: 70,
-                    onPressed: () async {
-                      try {
-                        await provider.signUp(
-                          nameController.text.trim(),
-                          int.tryParse(ageController.text.trim()) ?? 0,
-                          numberController.text.trim(),
-                          emailController.text.trim(),
-                          passwordController.text.trim(),
+                          btnLabel: "Sign Up",
+                          paddingLeft: 70,
+                          paddingRight: 70,
+                          onPressed: () async {
+                            try {
+                              await provider.signUp(
+                                nameController.text.trim(),
+                                int.tryParse(ageController.text.trim()) ?? 0,
+                                numberController.text.trim(),
+                                emailController.text.trim(),
+                                passwordController.text.trim(),
+                              );
+
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      "✅ Sign up successful! Please check your email (and spam folder) to verify your account.",
+                                    ),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+
+                                await Future.delayed(
+                                  const Duration(seconds: 2),
+                                );
+
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  AppRoutes.login,
+                                );
+                              }
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("❌ Sign Up failed: $e")),
+                              );
+                            }
+                          },
                         );
-
-                        // ✅ After successful sign-up, show email verification message
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                "✅ Sign up successful! Please check your email (and spam folder) to verify your account.",
-                              ),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
-
-                          // You can delay navigation a little so user sees message
-                          await Future.delayed(const Duration(seconds: 2));
-
-                          Navigator.pushReplacementNamed(context, AppRoutes.login);
-                        }
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("❌ Sign Up failed: $e")),
-                        );
-                      }
-                    },
-                  );
                 },
               ),
-
               const SizedBox(height: 20),
 
               /// Navigate Login Screen Text
@@ -165,10 +171,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   decoration: TextDecoration.underline,
                   onTap: () {
                     if (authProvider.isLoggedIn) {
-                      // ✅ Navigation after successful signup
                       Navigator.pushReplacementNamed(context, AppRoutes.home);
                     } else {
-
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text("Sign Up failed, please try again"),

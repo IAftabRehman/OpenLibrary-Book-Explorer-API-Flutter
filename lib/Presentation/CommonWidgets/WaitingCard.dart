@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../Elements/CustomContainer.dart';
 import '../Elements/CustomText.dart';
 
+/// Custom Waiting Card Widget
 MyContainer waitingCard(String text) {
   return MyContainer(
     color: Colors.red.withValues(alpha: 0.7),

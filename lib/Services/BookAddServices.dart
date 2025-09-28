@@ -5,6 +5,7 @@ class FavoriteService {
   static final _auth = FirebaseAuth.instance;
   static final _firestore = FirebaseFirestore.instance;
 
+  /// Favorite Means (Add To Favorite)
   static Future<void> toggleFavorite(Map<String, dynamic> book) async {
     final user = _auth.currentUser;
     if (user == null) return;
@@ -13,15 +14,13 @@ class FavoriteService {
         .collection("users")
         .doc(user.uid)
         .collection("favorites")
-        .doc(book["id"].toString()); // using book id
+        .doc(book["id"].toString());
 
     final snapshot = await favRef.get();
 
     if (snapshot.exists) {
-      // remove from favorites
       await favRef.delete();
     } else {
-      // add to favorites
       await favRef.set({
         "title": book["title"],
         "author": book["author"],
@@ -32,6 +31,7 @@ class FavoriteService {
     }
   }
 
+  /// Showing there Favorite Books
   static Stream<bool> isFavorite(String bookId) {
     final user = _auth.currentUser;
     if (user == null) return const Stream.empty();

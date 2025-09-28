@@ -5,7 +5,6 @@ import 'package:openlibrary_book_explorer/Presentation/CommonWidgets/AppBarWidge
 import 'package:openlibrary_book_explorer/Presentation/Elements/CustomContainer.dart';
 import 'package:openlibrary_book_explorer/Providers/ChangeModeProvider.dart';
 import 'package:provider/provider.dart';
-
 import '../CommonWidgets/Drawer.dart';
 import '../Elements/CustomText.dart';
 
@@ -21,12 +20,21 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   final user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
+
+    /// Theme Provider
     final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
       key: _scaffoldKey,
       extendBodyBehindAppBar: false,
+
+      /// AppBar Widget
       appBar: AppBarWidget(titleText: "Favorite Books", searchIcon: false),
+
+      /// Drawer Widget
       drawer: DrawerWidget(),
+
+      /// Body Start
       body: MyContainer(
         decoration: BoxDecoration(
           gradient: themeProvider.backgroundColor

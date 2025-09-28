@@ -125,7 +125,6 @@ class MyIconContainer extends StatelessWidget {
               : CommonImageView(
                 imagePath: iconAsset,
                 height: iconHeight ?? 24,
-                // svgColor: iconColor ?? colors.textColorTypeGray,
               ),
     );
   }

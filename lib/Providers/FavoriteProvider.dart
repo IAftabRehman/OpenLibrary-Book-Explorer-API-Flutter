@@ -7,16 +7,18 @@ class FavoritesProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   List<Map<String, dynamic>> _userBooks = [];
+
   List<Map<String, dynamic>> get userBooks => _userBooks;
 
   bool _isLoading = false;
+
   bool get isLoading => _isLoading;
 
   String? _currentUid;
 
   String? get currentUid => _currentUid;
 
-  /// Sanitize Firestore doc ID
+  /// Replace Firestore doc ID with ('/' to '_')
   String _sanitizeId(String rawId) {
     return rawId.replaceAll('/', '_');
   }
@@ -43,24 +45,21 @@ class FavoritesProvider extends ChangeNotifier {
         .snapshots()
         .listen(
           (snapshot) {
-        _userBooks = snapshot.docs.map((d) {
-          final data = d.data();
-          return {
-            ...data,
-            "id": d.id,
-          };
-        }).toList();
+            _userBooks = snapshot.docs.map((d) {
+              final data = d.data();
+              return {...data, "id": d.id};
+            }).toList();
 
-        _isLoading = false;
-        notifyListeners();
-      },
-      onError: (e) {
-        debugPrint("🔥 Favorites listen error: $e");
-        _isLoading = false;
-        _userBooks = [];
-        notifyListeners();
-      },
-    );
+            _isLoading = false;
+            notifyListeners();
+          },
+          onError: (e) {
+            debugPrint("🔥 Favorites listen error: $e");
+            _isLoading = false;
+            _userBooks = [];
+            notifyListeners();
+          },
+        );
   }
 
   /// Add book to favorites
@@ -69,11 +68,18 @@ class FavoritesProvider extends ChangeNotifier {
     if (uid == null) throw Exception("User not logged in");
 
     String rawId =
-    (bookData['id'] ?? bookData['ocaid'] ?? bookData['key'] ?? bookData['title']).toString();
+        (bookData['id'] ??
+                bookData['ocaid'] ??
+                bookData['key'] ??
+                bookData['title'])
+            .toString();
     final bookId = _sanitizeId(rawId);
 
-    final docRef =
-    _firestore.collection('favorites').doc(uid).collection('books').doc(bookId);
+    final docRef = _firestore
+        .collection('favorites')
+        .doc(uid)
+        .collection('books')
+        .doc(bookId);
 
     final payload = {
       ...bookData,
@@ -109,7 +115,7 @@ class FavoritesProvider extends ChangeNotifier {
     return _userBooks.any((b) => (b['id'] ?? '').toString() == bookId);
   }
 
-  /// Direct Firestore stream for UI (optional)
+  /// Direct FireStore stream for UI (optional)
   Stream<List<Map<String, dynamic>>> favoritesStream() {
     final uid = _auth.currentUser?.uid;
     if (uid == null) return const Stream.empty();
@@ -120,7 +126,9 @@ class FavoritesProvider extends ChangeNotifier {
         .collection("books")
         .orderBy("savedAt", descending: true)
         .snapshots()
-        .map((snapshot) =>
-        snapshot.docs.map((d) => {"id": d.id, ...d.data()}).toList());
+        .map(
+          (snapshot) =>
+              snapshot.docs.map((d) => {"id": d.id, ...d.data()}).toList(),
+        );
   }
 }

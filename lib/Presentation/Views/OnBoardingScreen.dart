@@ -19,6 +19,7 @@ class OnBoardingScreen extends StatefulWidget {
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
   final PageController controller = PageController();
 
+  /// OnBoarding Content
   List<OnBoardingModel> model = [
     OnBoardingModel(
       title: "Discover Books",
@@ -42,15 +43,18 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /// Theme Provider
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
+      /// Body Start
       body: Container(
         decoration: BoxDecoration(gradient: themeProvider.backgroundColor),
         child: Column(
           children: [
+            /// OnBoarding Content
             Expanded(
               child: PageView.builder(
-                controller: controller, // ✅ Assign controller here
+                controller: controller,
                 itemCount: model.length,
                 itemBuilder: (context, index) {
                   return Padding(
@@ -93,7 +97,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               ),
             ),
 
-            /// 🔵 SmoothPageIndicator at the bottom
+            /// SmoothPageIndicator like dots
             SmoothPageIndicator(
               controller: controller,
               count: model.length,

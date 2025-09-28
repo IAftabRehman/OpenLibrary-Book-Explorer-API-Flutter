@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:openlibrary_book_explorer/Presentation/Views/AuthorDetails.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/AuthorsScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/BookRead.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/CategoriesScreen.dart';
@@ -9,7 +8,6 @@ import 'package:openlibrary_book_explorer/Presentation/Views/ForgetPasswordScree
 import 'package:openlibrary_book_explorer/Presentation/Views/HelpScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/IndividualCategory.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/LogInScreen.dart';
-import 'package:openlibrary_book_explorer/Presentation/Views/ProfileScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/SignUpScreen.dart';
 import 'package:openlibrary_book_explorer/Presentation/Views/TrendingBook.dart';
 import '../Presentation/Views/HomeScreen.dart';
@@ -25,31 +23,30 @@ class AppRoutes {
   static const String home = '/home';
   static const String categories = '/categories';
   static const String authors = '/authors';
-  static const String profile = '/profile';
   static const String individualCategory = '/individualCategory';
-  static const String authorDetails = '/authorDetails';
   static const String trendingBook = '/trendingBook';
   static const String bookRead = '/bookRead';
   static const String favorite = '/favorite';
   static const String help = '/help';
   static const String contact = '/contactMe';
 
+  /// Routing where user can not passing any values
   static Map<String, WidgetBuilder> routes = {
     splash: (context) => SplashScreen(),
     onBoarding: (context) => OnBoardingScreen(),
     login: (context) => LogInScreen(),
     signUp: (context) => SignUpScreen(),
-    forgetPassword : (context) => ForgetPasswordScreen(),
+    forgetPassword: (context) => ForgetPasswordScreen(),
     home: (context) => HomeScreen(),
     categories: (context) => CategoriesScreen(),
     authors: (context) => AuthorsScreen(),
-    profile: (context) => ProfileScreen(),
     trendingBook: (context) => TrendingBook(),
     favorite: (context) => FavoriteScreen(),
     help: (context) => HelpScreen(),
-    contact: (context) => ContactMeScreen()
+    contact: (context) => ContactMeScreen(),
   };
 
+  /// Routing where user passing values as well
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.individualCategory:
@@ -61,26 +58,14 @@ class AppRoutes {
           ),
         );
 
-      case AppRoutes.authorDetails:
-        final args = settings.arguments as Map<String, dynamic>;
-        final details = args["authorDetails"];
-        return CupertinoPageRoute(
-          builder: (_) => AuthorDetails(
-            authorDetails: details ?? {}, // ✅ fallback
-          ),
-        );
-
       case AppRoutes.bookRead:
         final args = settings.arguments as Map<String, dynamic>;
         return CupertinoPageRoute(
-          builder: (_) => BookRead(
-            ocaid: args["ocaid"],
-          ),
+          builder: (_) => BookRead(ocaid: args["ocaid"]),
         );
 
       default:
         return null;
     }
   }
-
 }

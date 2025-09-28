@@ -1,4 +1,4 @@
-class HelpModel{
+class HelpModel {
   final String title;
   final String content;
   bool isOpen;

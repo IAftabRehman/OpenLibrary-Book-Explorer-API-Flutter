@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:openlibrary_book_explorer/Configuration/Routes.dart';
 import 'package:openlibrary_book_explorer/Presentation/CommonWidgets/WaitingCard.dart';
 import 'package:openlibrary_book_explorer/Providers/LibraryProvider.dart';
 import 'package:provider/provider.dart';
@@ -32,10 +31,13 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /// Theme Provider
     final themeProvider = Provider.of<ThemeProvider>(context);
+
+    /// Logic Provider
     final libraryProvider = Provider.of<LibraryProvider>(context);
 
-    // 🔍 Filter authors by search
+    /// For Search Filtered about Authors
     final filteredAuthors = libraryProvider.authors.where((author) {
       final name = (author["name"] ?? "").toLowerCase();
       return name.contains(searchQuery.toLowerCase());
@@ -45,6 +47,8 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
       key: _scaffoldKey,
       extendBodyBehindAppBar: false,
       backgroundColor: Colors.transparent,
+
+      /// AppBar
       appBar: AppBarWidget(
         titleText: "Authors",
         searchIcon: true,
@@ -55,7 +59,11 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
           });
         },
       ),
+
+      /// Drawer
       drawer: const DrawerWidget(),
+
+      /// Body
       body: SafeArea(
         child: MyContainer(
           width: double.infinity,
@@ -65,6 +73,7 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              /// Search Box
               if (openSearch)
                 MyTextField(
                   onChanged: (value) {
@@ -88,68 +97,52 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
               const SizedBox(height: 10),
 
               libraryProvider.isLoading
-                  ? waitingCard("Please wait, fetching all authors may take some time...")
+                  /// Waiting Card
+                  ? waitingCard(
+                      "Please wait, fetching all authors may take some time...",
+                    )
                   : Expanded(
-                    child: ListView.builder(
-                                    physics: const BouncingScrollPhysics(),
-                                    itemCount: filteredAuthors.length,
-                                    itemBuilder: (context, index) {
-                    var author = filteredAuthors[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: MyContainer(
-                        onTap: () async {
-                          String authorKey = author['key'] ?? "";
-                          if (!authorKey.startsWith("/authors/")) {
-                            authorKey = "/authors/$authorKey";
-                          }
-
-                          final details = await libraryProvider
-                              .fetchAuthorDetails(authorKey);
-
-                          if (context.mounted) {
-                            Navigator.pushNamed(
-                              context,
-                              AppRoutes.authorDetails,
-                              arguments: {
-                                "authorDetails": details ?? {},
-                              },
-                            );
-                          }
-                        },
-                        height: 70,
-                        width: double.infinity,
-                        color: themeProvider.buttonBackgroundColor,
-                        borderRadius: BorderRadius.circular(10),
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 10,
-                        ),
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: MyText(
-                                text: author["name"] ?? "Unknown Author",
-                                size: 18,
-                                fontWeight: FontWeight.bold,
-                                color: themeProvider.primaryTextColor,
+                      child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: filteredAuthors.length,
+                        itemBuilder: (context, index) {
+                          var author = filteredAuthors[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: MyContainer(
+                              height: 70,
+                              width: double.infinity,
+                              color: themeProvider.buttonBackgroundColor,
+                              borderRadius: BorderRadius.circular(10),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 10,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: MyText(
+                                      text: author["name"] ?? "Unknown Author",
+                                      size: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: themeProvider.primaryTextColor,
+                                    ),
+                                  ),
+                                  Image.asset(
+                                    'assets/icons/author.png',
+                                    height: 45,
+                                    width: 45,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ],
                               ),
                             ),
-                            Image.asset(
-                              'assets/icons/author.png',
-                              height: 45,
-                              width: 45,
-                              fit: BoxFit.cover,
-                            ),
-                          ],
-                        ),
+                          );
+                        },
                       ),
-                    );
-                                    },
-                                  ),
-                  ),
+                    ),
             ],
           ),
         ),

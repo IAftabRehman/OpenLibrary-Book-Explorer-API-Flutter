@@ -86,7 +86,6 @@ class MyText extends StatelessWidget {
                 letterSpacing: letterSpacing ?? 0.2,
               ),
           textAlign: textAlign ?? TextAlign.start,
-          // textDirection: TextDirection.ltr,
           maxLines: maxLines,
           overflow: textOverflow ?? TextOverflow.ellipsis,
         ),

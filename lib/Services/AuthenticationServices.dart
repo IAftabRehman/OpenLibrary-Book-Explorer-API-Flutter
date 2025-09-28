@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthenticationServices{
+
+  /// Registration User
   Future<User?> registerUser({
     required String email,
     required String password,

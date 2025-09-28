@@ -20,9 +20,14 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /// Theme Provider
     final themeProvider = Provider.of<ThemeProvider>(context);
+
+    /// Authentication Provider
     final authProvider = Provider.of<AuthenticationProvider>(context);
+
     return Scaffold(
+      /// Body Start
       body: MyContainer(
         height: double.infinity,
         decoration: BoxDecoration(gradient: themeProvider.backgroundColor),
@@ -31,6 +36,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(height: 30),
+
+            /// Leading Icon (Back Icon)
             Align(
               alignment: Alignment.topLeft,
               child: IconButton(

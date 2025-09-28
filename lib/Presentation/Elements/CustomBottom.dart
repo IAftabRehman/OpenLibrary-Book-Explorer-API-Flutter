@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:openlibrary_book_explorer/Providers/ChangeModeProvider.dart';
 import 'package:provider/provider.dart';
-
 
 class MyButton extends StatelessWidget {
   final String? btnLabel;
@@ -52,38 +53,47 @@ class MyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    return GestureDetector(
-      onTap: onPressed,
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: paddingLeft ?? 0,
-          right: paddingRight ?? 0,
-          top: paddingTop ?? 0,
-          bottom: paddingBottom ?? 0,
-        ),
-        child: Container(
-          margin: margin,
-          padding: padding,
-          height: height ?? 55,
-          width: width ?? double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: borderRadius ?? BorderRadius.circular(10),
-            border: border,
-            color: color ?? themeProvider.buttonBackgroundColor,
-          ),
-          child: Center(
-
-            child: Text(
-              btnLabel!,
-              style:
-                  textStyle ??
-                  TextStyle(
-                    fontFamily: fontFamily ?? 'Poppins',
-                    fontSize: fontSize ?? 18,
-                    fontWeight: fontWeight ?? FontWeight.w600,
-                    letterSpacing: letterSpacing ?? 0,
-                    color: textColor ?? themeProvider.buttonTextColor,
-                  ),
+    return Animate(
+      effects: const [
+        FadeEffect(duration: Duration(milliseconds: 1000)),
+        MoveEffect(curve: Curves.fastLinearToSlowEaseIn),
+      ],
+      child: Bounce(
+        duration: const Duration(milliseconds: 100),
+        onPressed: onPressed,
+        child: GestureDetector(
+          onTap: onPressed,
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: paddingLeft ?? 0,
+              right: paddingRight ?? 0,
+              top: paddingTop ?? 0,
+              bottom: paddingBottom ?? 0,
+            ),
+            child: Container(
+              margin: margin,
+              padding: padding,
+              height: height ?? 55,
+              width: width ?? double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: borderRadius ?? BorderRadius.circular(10),
+                border: border,
+                color: color ?? themeProvider.buttonBackgroundColor,
+              ),
+              child: Center(
+                child: Text(
+                  btnLabel!,
+                  style:
+                      textStyle ??
+                      TextStyle(
+                        fontFamily: fontFamily ?? 'Poppins',
+                        fontSize: fontSize ?? 18,
+                        fontWeight: fontWeight ?? FontWeight.w600,
+                        letterSpacing: letterSpacing ?? 0,
+                        color: textColor ?? themeProvider.buttonTextColor,
+                      ),
+                ),
+              ),
             ),
           ),
         ),

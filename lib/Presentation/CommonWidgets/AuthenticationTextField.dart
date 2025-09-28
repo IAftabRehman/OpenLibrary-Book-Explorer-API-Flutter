@@ -3,6 +3,7 @@ import 'package:openlibrary_book_explorer/Providers/ChangeModeProvider.dart';
 import 'package:provider/provider.dart';
 import '../Elements/CustomTextField.dart';
 
+/// Custom Authentication Text Field
 class AuthenticationTextField extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType? keyboard;

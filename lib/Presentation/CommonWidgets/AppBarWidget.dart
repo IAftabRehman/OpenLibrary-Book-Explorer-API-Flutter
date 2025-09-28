@@ -5,7 +5,7 @@ import '../../Providers/ChangeModeProvider.dart';
 import '../Elements/CustomContainer.dart';
 import '../Elements/CustomText.dart';
 
-/// ✅ Custom AppBar Widget
+/// Custom AppBar Widget
 class AppBarWidget extends StatefulWidget implements PreferredSizeWidget {
   final String titleText;
   final bool searchIcon;
@@ -38,6 +38,8 @@ class _AppBarWidgetState extends State<AppBarWidget> {
       backgroundColor: themeProvider.appBarBackgroundColor,
       elevation: 5,
       shadowColor: themeProvider.primaryTextColor,
+
+      /// Leading Icon
       leading: MyIconContainer(
         onTap: () {
           Scaffold.of(context).openDrawer();
@@ -54,28 +56,30 @@ class _AppBarWidgetState extends State<AppBarWidget> {
       ),
       centerTitle: true,
       actions: [
+        /// Support Agent Icon
         widget.contactIcon
             ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: MyIconContainer(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: MyIconContainer(
                   icon: Icons.support_agent_outlined,
                   iconColor: themeProvider.primaryTextColor,
-                        iconSize: 30,
-                onTap: () {
-                  setState(() {
-                    Navigator.pushNamed(context, AppRoutes.contact);
-                  });
-                },
-
+                  iconSize: 30,
+                  onTap: () {
+                    setState(() {
+                      Navigator.pushNamed(context, AppRoutes.contact);
+                    });
+                  },
                 ),
-            )
+              )
             : SizedBox(),
+
+        /// Search Icon
         widget.searchIcon
             ? MyIconContainer(
                 icon: openSearch ? Icons.close : Icons.search,
                 iconColor: themeProvider.primaryTextColor,
                 iconSize: 30,
-          onTap: () {
+                onTap: () {
                   setState(() {
                     openSearch = !openSearch;
                   });

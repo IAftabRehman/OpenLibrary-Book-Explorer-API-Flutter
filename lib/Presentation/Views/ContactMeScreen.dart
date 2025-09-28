@@ -14,14 +14,23 @@ class ContactMeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// Theme Provider
     final themeProvider = Provider.of<ThemeProvider>(context);
+
+    /// Contact Provider
     final contactProvider = Provider.of<ContactProvider>(context, listen: false);
 
     return Scaffold(
       key: _scaffoldKey,
       extendBodyBehindAppBar: false,
+
+      /// AppBar Widget
       appBar: AppBarWidget(titleText: "Contact Me", searchIcon: false),
+
+      /// Drawer Widget
       drawer: DrawerWidget(),
+
+      /// Body Start
       body: MyContainer(
         height: double.infinity,
         decoration: BoxDecoration(gradient: themeProvider.backgroundColor),
@@ -31,9 +40,9 @@ class ContactMeScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 50),
 
-            /// 📞 Phone
+            /// Phone Number
             GestureDetector(
-              onTap: () => contactProvider.launchPhone("03323220916"),
+              onTap: () => contactProvider.phoneNumber("03323220916"),
               child: Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15)),
@@ -56,10 +65,10 @@ class ContactMeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 15),
 
-            /// 📧 Email
+            /// Email Address
             GestureDetector(
               onTap: () =>
-                  contactProvider.launchEmail("iamaftabrehman@gmail.com"),
+                  contactProvider.emailLink("iamaftabrehman@gmail.com"),
               child: Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15)),
@@ -82,9 +91,9 @@ class ContactMeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 15),
 
-            /// 🌐 LinkedIn
+            /// Linkedin Profile
             GestureDetector(
-              onTap: () => contactProvider.launchLinkedIn(
+              onTap: () => contactProvider.linkedinLink(
                   "https://www.linkedin.com/in/aftab-rehman/"),
               child: Card(
                 shape: RoundedRectangleBorder(

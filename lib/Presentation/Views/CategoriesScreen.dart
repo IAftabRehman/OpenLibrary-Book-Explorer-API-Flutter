@@ -21,7 +21,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   bool openSearch = false;
   String searchQuery = "";
 
-
+  /// Categories Model
   List<CategoriesModel> categoriesModel = [
     CategoriesModel(name: "Architecture", link: "architecture"),
     CategoriesModel(name: "Art Instruction", link: "art__art_instruction"),
@@ -90,15 +90,21 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /// Theme Provider
     final themeProvider = Provider.of<ThemeProvider>(context);
+
+    /// Categories Name Filtered by Search Bar
     List<CategoriesModel> filteredCategories = categoriesModel
-        .where((cat) =>
-        cat.name.toLowerCase().contains(searchQuery.toLowerCase()))
+        .where(
+          (cat) => cat.name.toLowerCase().contains(searchQuery.toLowerCase()),
+        )
         .toList();
-    return  SafeArea(
+    return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.transparent,
+
+        /// AppBar Widget
         appBar: AppBarWidget(
           titleText: "Book Categories",
           searchIcon: true,
@@ -109,7 +115,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             });
           },
         ),
+
+        /// Drawer Widget
         drawer: const DrawerWidget(),
+
+        /// Body Start
         body: MyContainer(
           width: double.infinity,
           height: double.infinity,
@@ -118,6 +128,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              /// Search Box
               if (openSearch)
                 MyTextField(
                   onChanged: (value) {
@@ -137,9 +148,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   textColor: themeProvider.primaryTextColor,
                   textSize: 16,
                 ),
-
               const SizedBox(height: 10),
 
+              /// Main Content
               Expanded(
                 child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
@@ -163,7 +174,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         color: themeProvider.buttonBackgroundColor,
                         borderRadius: BorderRadius.circular(10),
                         padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 15),
+                          vertical: 10,
+                          horizontal: 15,
+                        ),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: MyText(

@@ -5,10 +5,11 @@ class BookStoreService {
 
   /// Save book under a specific user
   Future<void> saveBookForUser({
-    required String userDocId,   // e.g. from RegistrationModel.docId
-    required Map<String, dynamic> bookData, // book info
+    required String userDocId,
+    required Map<String, dynamic> bookData,
   }) async {
-    final bookId = bookData["id"]?.toString() ??
+    final bookId =
+        bookData["id"]?.toString() ??
         bookData["ocaid"]?.toString() ??
         bookData["title"];
 
@@ -16,11 +17,8 @@ class BookStoreService {
         .collection("createAccount")
         .doc(userDocId)
         .collection("books")
-        .doc(bookId) // prevent duplicate book entries
-        .set({
-      ...bookData,
-      "savedAt": FieldValue.serverTimestamp(),
-    });
+        .doc(bookId)
+        .set({...bookData, "savedAt": FieldValue.serverTimestamp()});
   }
 
   /// Get all books of a specific user
@@ -31,8 +29,7 @@ class BookStoreService {
         .collection("books")
         .orderBy("savedAt", descending: true)
         .snapshots()
-        .map((snapshot) =>
-        snapshot.docs.map((doc) => doc.data()).toList());
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   }
 
   /// Remove a book for a specific user
@@ -47,6 +44,4 @@ class BookStoreService {
         .doc(bookId)
         .delete();
   }
-
-
 }

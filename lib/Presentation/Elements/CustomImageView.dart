@@ -44,13 +44,6 @@ class CommonImageView extends StatelessWidget {
         child: SizedBox(
           height: height,
           width: width,
-          // child: SvgPicture.asset(
-          //   svgPath!,
-          //   height: height ?? 24,
-          //   width: width ?? 24,
-          //   fit: fit,
-          //   color: svgColor,
-          // ),
         ),
       );
     } else if (file != null && file!.path.isNotEmpty) {
@@ -66,34 +59,6 @@ class CommonImageView extends StatelessWidget {
           ),
         ),
       );
-    } else if (url != null && url!.isNotEmpty) {
-      // return Animate(
-      //   effects: const [FadeEffect(duration: Duration(milliseconds: 500))],
-      //   child: ClipRRect(
-      //     borderRadius: borderRadius ?? BorderRadius.circular(00),
-      //     child: CachedNetworkImage(
-      //       height: height,
-      //       width: width,
-      //       fit: fit,
-      //       imageUrl: url!,
-      //       placeholder: (context, url) => SizedBox(
-      //         height: height ?? 23,
-      //         width: width ?? 23,
-      //         child: Center(
-      //           child: SizedBox(
-      //             height: 20,
-      //             width: 20,
-      //             child: CircularProgressIndicator(
-      //               color: Colors.black,
-      //               backgroundColor: Colors.grey.shade100,
-      //             ),
-      //           ),
-      //         ),
-      //       ),
-      //       errorWidget: (context, url, error) => _buildErrorWidget(),
-      //     ),
-      //   ),
-      // );
     } else if (imagePath != null && imagePath!.isNotEmpty) {
       return Animate(
         effects: const [FadeEffect(duration: Duration(milliseconds: 500))],

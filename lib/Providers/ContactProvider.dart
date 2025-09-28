@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactProvider with ChangeNotifier {
-  // 📞 Launch Phone
-  Future<void> launchPhone(String phoneNumber) async {
+
+  /// Phone Number Open
+  Future<void> phoneNumber(String phoneNumber) async {
     final Uri url = Uri(scheme: 'tel', path: phoneNumber);
     if (await canLaunchUrl(url)) {
       await launchUrl(url);
@@ -12,8 +13,8 @@ class ContactProvider with ChangeNotifier {
     }
   }
 
-  // 📧 Launch Email
-  Future<void> launchEmail(String email) async {
+  /// Email Link Open
+  Future<void> emailLink(String email) async {
     final Uri url = Uri(
       scheme: 'mailto',
       path: email,
@@ -26,8 +27,8 @@ class ContactProvider with ChangeNotifier {
     }
   }
 
-  // 🌐 Launch LinkedIn
-  Future<void> launchLinkedIn(String urlString) async {
+  /// LinkedIn Link Open
+  Future<void> linkedinLink(String urlString) async {
     final Uri url = Uri.parse(urlString);
     if (await canLaunchUrl(url)) {
       await launchUrl(url, mode: LaunchMode.externalApplication);

@@ -28,6 +28,7 @@ class _IndividualCategoryState extends State<IndividualCategory> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool openSearch = false;
 
+  /// Fetching Book Categories
   @override
   void initState() {
     super.initState();
@@ -41,15 +42,24 @@ class _IndividualCategoryState extends State<IndividualCategory> {
 
   @override
   Widget build(BuildContext context) {
+    ///  ThemeProvider
     final themeProvider = Provider.of<ThemeProvider>(context);
+
+    /// Logical Provider
     final categoryProvider = Provider.of<LibraryProvider>(context);
 
     return Scaffold(
       key: _scaffoldKey,
       extendBodyBehindAppBar: false,
       backgroundColor: Colors.transparent,
+
+      /// AppBar Widget
       appBar: AppBarWidget(titleText: widget.authorDetails, searchIcon: true),
+
+      /// Drawer Widget
       drawer: DrawerWidget(),
+
+      /// Body Start
       body: MyContainer(
         width: double.infinity,
         height: double.infinity,
@@ -58,6 +68,7 @@ class _IndividualCategoryState extends State<IndividualCategory> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            /// Searching Box
             if (openSearch)
               Padding(
                 padding: const EdgeInsets.only(bottom: 12),
@@ -125,9 +136,7 @@ class _IndividualCategoryState extends State<IndividualCategory> {
                           padding: const EdgeInsets.all(12),
                           child: Row(
                             children: [
-                              // Book Cover
-
-                              // Book Details
+                              /// Book Details
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,8 +1,10 @@
 import 'dart:convert';
 
-RegistrationModel registrationModelFromJson(String str) => RegistrationModel.fromJson(json.decode(str));
+RegistrationModel registrationModelFromJson(String str) =>
+    RegistrationModel.fromJson(json.decode(str));
 
-String registrationModelToJson(RegistrationModel data) => json.encode(data.toJson());
+String registrationModelToJson(RegistrationModel data) =>
+    json.encode(data.toJson());
 
 class RegistrationModel {
   final String docId;
@@ -23,15 +25,16 @@ class RegistrationModel {
     required this.password,
   });
 
-  factory RegistrationModel.fromJson(Map<String, dynamic> json) => RegistrationModel(
-    docId: json["docId"],
-    createdAt: json["createdAt"],
-    name: json["name"],
-    age: json["age"],
-    phoneNumber: json["phoneNumber"],
-    email: json["email"],
-    password: json["password"],
-  );
+  factory RegistrationModel.fromJson(Map<String, dynamic> json) =>
+      RegistrationModel(
+        docId: json["docId"],
+        createdAt: json["createdAt"],
+        name: json["name"],
+        age: json["age"],
+        phoneNumber: json["phoneNumber"],
+        email: json["email"],
+        password: json["password"],
+      );
 
   Map<String, dynamic> toJson() {
     return {
@@ -41,7 +44,6 @@ class RegistrationModel {
       "age": age,
       "phoneNumber": phoneNumber,
       "email": email,
-      // "password": password, ❌ don’t save password in Firestore
     };
   }
 }
