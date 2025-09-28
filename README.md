@@ -28,16 +28,15 @@ It helps you to:
 
 - ✅ Splash Screen with Auth Check (Firebase)
 - ✅ Home Screen with:
-    - Search bar (debounced + manual search)
-    - Recent searches (local cache)
-    - Popular subjects carousel
+    - Trending section
+    - Categories section
+    - Author section
     - Favorites section (if signed in)
 - ✅ Search Screen:
-    - Filter by All / Title / Author / ISBN
+    - Filter by All / Title / Author
     - Infinite scroll results
 - ✅ Work Detail Screen:
-    - Book cover, title, authors, publish year
-    - Description and subject chips
+    - Book cover, title, authors
     - Add/Remove Favorites
 - ✅ Editions Screen:
     - Browse all editions
